@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}Agenda tu cita — Lleva tu carro al taller | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">AGENDA TU CITA</p>
+      <h2 data-reveal="">Lleva tu carro al taller</h2>
+      <p class="section-lede" data-reveal="">
+        Cuéntanos los datos de tu vehículo y cuándo puedes traerlo. Te confirmamos por
+        teléfono antes de la fecha. Una vez recibamos el carro, podrás seguir su proceso
+        en <a href="{{ url_for('historial.buscar') }}">Historia mecánica del vehículo</a>.
+      </p>
+    </div>
+
+    {% if enviado %}
+    <div class="form-success" data-reveal="">
+      <p>¡Listo! Recibimos tu solicitud de cita. Te contactaremos para confirmar fecha y hora.</p>
+      <a class="btn btn--ghost" href="{{ url_for('public.index') }}">Volver al inicio</a>
+    </div>
+    {% else %}
+      {% if errores %}
+      <ul class="form-errors" data-reveal="">
+        {% for error in errores %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      <form class="contact-form form--narrow" method="post" action="{{ url_for('public.cita_vehiculo') }}" data-reveal="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field-row">
+          <div class="field"><label for="c-nombre">Nombre</label><input id="c-nombre" name="nombre" type="text" required></div>
+          <div class="field"><label for="c-telefono">Teléfono</label><input id="c-telefono" name="telefono" type="tel" required></div>
+        </div>
+        <div class="field"><label for="c-email">Correo (opcional)</label><input id="c-email" name="email" type="email"></div>
+        <div class="field-row">
+          <div class="field"><label for="c-placa">Placa</label><input id="c-placa" name="placa" type="text" required></div>
+          <div class="field"><label for="c-marca">Marca</label><input id="c-marca" name="marca" type="text"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="c-modelo">Modelo</label><input id="c-modelo" name="modelo" type="text"></div>
+          <div class="field"><label for="c-anio">Año</label><input id="c-anio" name="anio" inputmode="numeric" type="text"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="c-fecha">Fecha</label><input id="c-fecha" name="fecha" type="date" required></div>
+          <div class="field"><label for="c-hora">Hora</label><input id="c-hora" name="hora" type="time" required></div>
+        </div>
+        <div class="field">
+          <label for="c-servicio">¿Qué servicio necesitas?</label>
+          <input id="c-servicio" name="servicio" type="text" placeholder="Diagnóstico, mantenimiento, frenos…">
+        </div>
+        <div class="field"><label for="c-notas">Notas adicionales</label><textarea id="c-notas" name="notas" rows="3"></textarea></div>
+        <button class="btn btn--cta btn--full" type="submit">Agendar cita</button>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

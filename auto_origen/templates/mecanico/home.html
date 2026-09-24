@@ -1,0 +1,14 @@
+{% extends "mecanico/base.html" %}
+{% block title %}AutoorigenInspect{% endblock %}
+{% block content %}
+<h1 class="mecanico-titulo">Inicio</h1>
+<p class="mecanico-subtitulo">¿Qué vas a hacer?</p>
+
+<div class="mecanico-acciones">
+  <button class="btn btn--cta btn--full" id="btnNueva" type="button">Nueva inspección</button>
+  <button class="btn btn--ghost btn--full" id="btnHistorial" type="button">Revisión de inspecciones anteriores</button>
+</div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mecanico/home.js') }}"></script>
+{% endblock %}

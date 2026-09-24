@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{% block title %}AutoorigenInspect — Mecánico{% endblock %}</title>
+
+<link rel="manifest" href="{{ url_for('static', filename='manifest-mecanico.webmanifest') }}">
+<meta name="theme-color" content="#0A0B0D">
+<link rel="icon" href="{{ url_for('static', filename='icons/favicon-32.png') }}" sizes="32x32">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AO Mecánico">
+<meta name="mobile-web-app-capable" content="yes">
+
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/mecanico.css') }}" rel="stylesheet">
+</head>
+<body>
+<div class="mecanico-shell">
+  <header class="mecanico-topbar">
+    <svg aria-hidden="true" class="brand__mark" height="22" viewBox="0 0 100 100" width="22">
+      <circle class="mark-ring mark-ring--outer" cx="50" cy="50" r="34"></circle>
+      <circle class="mark-ring mark-ring--inner" cx="50" cy="50" r="20"></circle>
+      <circle class="mark-dot" cx="50" cy="50" r="3"></circle>
+    </svg>
+    <span class="mecanico-topbar__titulo">AutoorigenInspect</span>
+    <span class="mecanico-topbar__tecnico" id="mecanicoNombre"></span>
+    <button class="mecanico-topbar__salir" id="mecanicoSalir" type="button" hidden>Salir</button>
+  </header>
+
+  <main class="mecanico-main">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/pwa.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mecanico/comun.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

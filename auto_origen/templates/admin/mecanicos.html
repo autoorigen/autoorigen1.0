@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block title %}Mecánicos — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Mecánicos (app Android)</h2>
+      <p class="section-lede">
+        Usuarios con acceso a la app de inspecciones. No pueden entrar al panel web.
+        <a href="{{ url_for('admin.dashboard') }}">← Volver al panel</a>
+      </p>
+    </div>
+
+    <details class="admin-form-toggle" data-reveal="">
+      <summary class="btn btn--cta btn--small">Nuevo mecánico</summary>
+      <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.mecanicos') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field"><label>Nombre</label><input name="nombre" type="text" required></div>
+        <div class="field"><label>Usuario</label><input name="usuario" type="text" required></div>
+        <div class="field"><label>Contraseña (mínimo 8 caracteres)</label><input name="password" type="password" minlength="8" required></div>
+        <button class="btn btn--cta btn--full" type="submit">Crear mecánico</button>
+      </form>
+    </details>
+
+    <div class="table-scroll" data-reveal="">
+      <table class="admin-table">
+        <thead><tr><th>Nombre</th><th>Usuario</th><th>Creado</th><th></th></tr></thead>
+        <tbody>
+          {% for mecanico in mecanicos %}
+          <tr>
+            <td>{{ mecanico.nombre }}</td>
+            <td>{{ mecanico.usuario }}</td>
+            <td>{{ mecanico.creado_en[:10] }}</td>
+            <td>
+              <form method="post" action="{{ url_for('admin.eliminar_mecanico', mecanico_id=mecanico.id) }}" onsubmit="return confirm('¿Eliminar este mecánico?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn--ghost btn--small" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">Todavía no hay mecánicos registrados.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

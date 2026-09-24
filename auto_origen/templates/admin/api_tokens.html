@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+
+{% block title %}Tokens app móvil — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Tokens de la app móvil</h2>
+      <p class="section-lede">
+        Token que usará <strong>AutoorigenInspect (AO)</strong> para llamar a <code>/api/...</code>.
+        Ver <code>app-ios/README.md</code> para el contrato completo.
+        <a href="{{ url_for('admin.dashboard') }}">← Volver al panel</a>
+      </p>
+    </div>
+
+    {% if token_generado %}
+    <div class="form-success" data-reveal="">
+      <p>Token generado — cópialo ahora, no se vuelve a mostrar:</p>
+      <p class="form-note form-note--static"><code>{{ token_generado }}</code></p>
+    </div>
+    {% endif %}
+
+    <details class="admin-form-toggle" data-reveal="">
+      <summary class="btn btn--cta btn--small">Nuevo token</summary>
+      <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.api_tokens') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field"><label>Nombre del dispositivo</label><input name="nombre_dispositivo" type="text" placeholder="iPhone de pruebas — AO" required></div>
+        <button class="btn btn--cta btn--full" type="submit">Generar token</button>
+      </form>
+    </details>
+
+    <div class="table-scroll" data-reveal="">
+      <table class="admin-table">
+        <thead><tr><th>Dispositivo</th><th>Estado</th><th>Creado</th><th></th></tr></thead>
+        <tbody>
+          {% for token in tokens %}
+          <tr>
+            <td>{{ token.nombre_dispositivo }}</td>
+            <td><span class="badge">{{ "activo" if token.activo else "revocado" }}</span></td>
+            <td>{{ token.creado_en[:10] }}</td>
+            <td>
+              {% if token.activo %}
+              <form method="post" action="{{ url_for('admin.revocar_api_token', token_id=token.id) }}" onsubmit="return confirm('¿Revocar este token?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn--ghost btn--small" type="submit">Revocar</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">Todavía no hay tokens generados.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

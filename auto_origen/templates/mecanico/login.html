@@ -1,0 +1,22 @@
+{% extends "mecanico/base.html" %}
+{% block title %}Entrar — AutoorigenInspect{% endblock %}
+{% block content %}
+<h1 class="mecanico-titulo">AutoorigenInspect</h1>
+<p class="mecanico-subtitulo">Acceso de mecánicos</p>
+
+<form class="contact-form" id="formLogin" novalidate>
+  <div class="field">
+    <label for="m-usuario">Usuario</label>
+    <input id="m-usuario" name="usuario" type="text" autocomplete="username" required>
+  </div>
+  <div class="field">
+    <label for="m-password">Contraseña</label>
+    <input id="m-password" name="password" type="password" autocomplete="current-password" required>
+  </div>
+  <p class="form-note" id="loginNota" aria-live="polite"></p>
+  <button class="btn btn--cta btn--full" type="submit">Entrar</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mecanico/login.js') }}"></script>
+{% endblock %}

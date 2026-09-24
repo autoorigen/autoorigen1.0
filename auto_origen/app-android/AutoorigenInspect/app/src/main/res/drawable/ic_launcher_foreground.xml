@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Marca Autoorigen: anillos + punto, igual que static/css/style.css (.mark-ring/.mark-dot) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:pathData="M91,54 A37,37 0 1,0 17,54 A37,37 0 1,0 91,54 Z"
+        android:strokeColor="#FF5A1F"
+        android:strokeWidth="4"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M76,54 A22,22 0 1,0 32,54 A22,22 0 1,0 76,54 Z"
+        android:strokeColor="#9096A0"
+        android:strokeWidth="4"
+        android:fillColor="#00000000" />
+    <path
+        android:pathData="M57.5,54 A3.5,3.5 0 1,0 50.5,54 A3.5,3.5 0 1,0 57.5,54 Z"
+        android:fillColor="#FF5A1F" />
+</vector>

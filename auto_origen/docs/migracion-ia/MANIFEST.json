@@ -1,0 +1,25 @@
+{
+  "project": "Autoorigen",
+  "app": "AutoorigenInspect",
+  "display_name": "AO",
+  "cutoff": "2026-09-24",
+  "package_contents": [
+    "00_LEEME_PRIMERO.md",
+    "01_CONTEXTO_NEGOCIO_AUTOORIGEN.md",
+    "02_ESTADO_TECNICO_ACTUAL.md",
+    "03_ARQUITECTURA_Y_MODELO_DATOS.md",
+    "04_ROADMAP_CONTINUACION.md",
+    "05_PROMPT_MAESTRO_PARA_OTRA_IA.md",
+    "06_CHECKLIST_MIGRACION.md",
+    "07_INVENTARIO_DE_CONOCIMIENTO.md",
+    "08_ESTADO_Y_DECISIONES.md",
+    "09_MANUAL_PARA_EL_USUARIO_Y_NUEVA_IA.md"
+  ],
+  "source_code_status": "NOT_INCLUDED: complete Xcode source was not available as an attached/retrievable project file in this conversation context.",
+  "known_environment": {
+    "mac": "MacBook Pro 13-inch 2020 Intel",
+    "macos": "15.7.7",
+    "xcode": "16.4",
+    "bundle_id": "com.autoorigen.AutoorigenInspect"
+  }
+}

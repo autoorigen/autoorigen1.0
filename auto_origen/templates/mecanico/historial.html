@@ -1,0 +1,12 @@
+{% extends "mecanico/base.html" %}
+{% block title %}Inspecciones anteriores — AutoorigenInspect{% endblock %}
+{% block content %}
+<h1 class="mecanico-titulo">Inspecciones anteriores</h1>
+<p class="mecanico-subtitulo">Solo lectura.</p>
+
+<p class="mecanico-cargando" id="historialCargando">Cargando…</p>
+<div class="mecanico-lista" id="listaHistorial"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mecanico/historial.js') }}"></script>
+{% endblock %}

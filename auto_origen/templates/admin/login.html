@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}Panel admin — AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Entrar al panel</h2>
+    </div>
+
+    {% if error %}
+    <ul class="form-errors" data-reveal="">
+      <li>{{ error }}</li>
+    </ul>
+    {% endif %}
+
+    <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.login') }}" data-reveal="">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="a-usuario">Usuario</label>
+        <input id="a-usuario" name="usuario" type="text" required autofocus>
+      </div>
+      <div class="field">
+        <label for="a-password">Contraseña</label>
+        <input id="a-password" name="password" type="password" required>
+      </div>
+      <button class="btn btn--cta btn--full" type="submit">Entrar</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

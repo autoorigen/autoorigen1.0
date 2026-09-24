@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Citas — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Citas</h2>
+      <p class="section-lede"><a href="{{ url_for('admin.dashboard') }}">← Volver al panel</a></p>
+    </div>
+
+    <div class="table-scroll" data-reveal="">
+      <table class="admin-table">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Cliente</th><th>Vehículo</th><th>Servicio</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+          {% for cita in citas %}
+          <tr>
+            <td>{{ cita.fecha }} {{ cita.hora }}</td>
+            <td>{{ "Carro al taller" if cita.tipo == "vehiculo" else "Visita" }}</td>
+            <td>{{ cita.cliente_nombre }} · {{ cita.cliente_telefono }}</td>
+            <td>{{ cita.vehiculo_placa or "—" }}</td>
+            <td>{{ cita.servicio or "—" }}</td>
+            <td><span class="badge">{{ cita.estado }}</span></td>
+            <td class="admin-table__acciones">
+              <form method="post" action="{{ url_for('admin.cambiar_estado_cita', cita_id=cita.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <select name="estado" onchange="this.form.submit()">
+                  {% for estado in ["pendiente", "confirmada", "cancelada", "completada"] %}
+                  <option value="{{ estado }}" {{ "selected" if estado == cita.estado else "" }}>{{ estado.capitalize() }}</option>
+                  {% endfor %}
+                </select>
+              </form>
+              <form method="post" action="{{ url_for('admin.eliminar_cita', cita_id=cita.id) }}" onsubmit="return confirm('¿Eliminar esta cita?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn--ghost btn--small" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7">Todavía no hay citas agendadas.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Agenda tu cita — Visita el taller | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">AGENDA TU CITA</p>
+      <h2 data-reveal="">Visita el taller físico</h2>
+      <p class="section-lede" data-reveal="">
+        Para asesoría, diagnóstico precompra, conocer las instalaciones o hablar de un
+        proyecto sin traer todavía el vehículo. Agenda un horario y te esperamos.
+      </p>
+    </div>
+
+    {% if enviado %}
+    <div class="form-success" data-reveal="">
+      <p>¡Listo! Recibimos tu solicitud de visita. Te contactaremos para confirmar fecha y hora.</p>
+      <a class="btn btn--ghost" href="{{ url_for('public.index') }}">Volver al inicio</a>
+    </div>
+    {% else %}
+      {% if errores %}
+      <ul class="form-errors" data-reveal="">
+        {% for error in errores %}<li>{{ error }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+      <form class="contact-form form--narrow" method="post" action="{{ url_for('public.cita_visita') }}" data-reveal="">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field-row">
+          <div class="field"><label for="v-nombre">Nombre</label><input id="v-nombre" name="nombre" type="text" required></div>
+          <div class="field"><label for="v-telefono">Teléfono</label><input id="v-telefono" name="telefono" type="tel" required></div>
+        </div>
+        <div class="field"><label for="v-email">Correo (opcional)</label><input id="v-email" name="email" type="email"></div>
+        <div class="field-row">
+          <div class="field"><label for="v-fecha">Fecha</label><input id="v-fecha" name="fecha" type="date" required></div>
+          <div class="field"><label for="v-hora">Hora</label><input id="v-hora" name="hora" type="time" required></div>
+        </div>
+        <div class="field">
+          <label for="v-motivo">Motivo de la visita</label>
+          <input id="v-motivo" name="motivo" type="text" placeholder="Asesoría, diagnóstico precompra, ver instalaciones…">
+        </div>
+        <div class="field"><label for="v-notas">Notas adicionales</label><textarea id="v-notas" name="notas" rows="3"></textarea></div>
+        <button class="btn btn--cta btn--full" type="submit">Agendar visita</button>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

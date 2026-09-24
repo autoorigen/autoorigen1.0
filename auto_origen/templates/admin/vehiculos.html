@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}Vehículos — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Vehículos</h2>
+      <p class="section-lede"><a href="{{ url_for('admin.dashboard') }}">← Volver al panel</a></p>
+    </div>
+
+    <details class="admin-form-toggle" data-reveal="">
+      <summary class="btn btn--cta btn--small">Nuevo vehículo</summary>
+      <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.vehiculos') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field">
+          <label>Cliente</label>
+          <select name="cliente_id" required>
+            <option value="">Selecciona un cliente…</option>
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">{{ cliente.nombre }} — {{ cliente.telefono }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="field"><label>Placa</label><input name="placa" type="text" required></div>
+        <div class="field-row">
+          <div class="field"><label>Marca</label><input name="marca" type="text"></div>
+          <div class="field"><label>Modelo</label><input name="modelo" type="text"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Año</label><input name="anio" type="text" inputmode="numeric"></div>
+          <div class="field"><label>Color</label><input name="color" type="text"></div>
+        </div>
+        <button class="btn btn--cta btn--full" type="submit">Crear vehículo</button>
+      </form>
+    </details>
+
+    {% if not clientes %}
+    <p class="section-lede" data-reveal="">Primero <a href="{{ url_for('admin.clientes') }}">crea un cliente</a> para poder asociarle un vehículo.</p>
+    {% endif %}
+
+    <div class="table-scroll" data-reveal="">
+      <table class="admin-table">
+        <thead><tr><th>Placa</th><th>Vehículo</th><th>Cliente</th><th></th></tr></thead>
+        <tbody>
+          {% for vehiculo in vehiculos %}
+          <tr>
+            <td>{{ vehiculo.placa }}</td>
+            <td>{{ vehiculo.marca or "" }} {{ vehiculo.modelo or "" }} {{ vehiculo.anio or "" }}</td>
+            <td>{{ vehiculo.cliente_nombre }}</td>
+            <td>
+              <a class="btn btn--ghost btn--small" href="{{ url_for('admin.vehiculo_detalle', vehiculo_id=vehiculo.id) }}">Ver hoja de vida</a>
+              <form method="post" action="{{ url_for('admin.eliminar_vehiculo', vehiculo_id=vehiculo.id) }}" onsubmit="return confirm('¿Eliminar este vehículo y su historial?');" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn--ghost btn--small" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">Todavía no hay vehículos registrados.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

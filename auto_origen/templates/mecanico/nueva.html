@@ -1,0 +1,36 @@
+{% extends "mecanico/base.html" %}
+{% block title %}Nueva inspección — AutoorigenInspect{% endblock %}
+{% block content %}
+<h1 class="mecanico-titulo">Nueva inspección</h1>
+<p class="mecanico-subtitulo">La placa es el identificador principal del vehículo.</p>
+
+<form class="contact-form" id="formNueva" novalidate>
+  <div class="field"><label for="n-placa">Placa</label><input id="n-placa" name="placa" type="text" autocapitalize="characters" required></div>
+  <div class="field"><label for="n-cliente">Nombre del cliente</label><input id="n-cliente" name="cliente_nombre" type="text" required></div>
+  <div class="field"><label for="n-telefono">Teléfono del cliente</label><input id="n-telefono" name="cliente_telefono" type="tel" required></div>
+  <div class="field-row">
+    <div class="field"><label for="n-marca">Marca</label><input id="n-marca" name="marca" type="text" placeholder="Toyota"></div>
+    <div class="field"><label for="n-modelo">Modelo</label><input id="n-modelo" name="modelo" type="text" placeholder="Corolla"></div>
+  </div>
+
+  <div class="field">
+    <label>Combustible</label>
+    <div class="mecanico-acciones" style="flex-direction:row; gap:8px; margin-top:4px;">
+      <button type="button" class="chip chip-combustible" data-valor="gasolina">Gasolina</button>
+      <button type="button" class="chip chip-combustible" data-valor="hibrido">Híbrido</button>
+      <button type="button" class="chip chip-combustible" data-valor="electrico">Eléctrico</button>
+    </div>
+  </div>
+
+  <div class="field-row">
+    <div class="field"><label for="n-km">Kilometraje del vehículo</label><input id="n-km" name="kilometraje" type="text" inputmode="numeric"></div>
+    <div class="field"><label for="n-km-aceite">Kilometraje del aceite</label><input id="n-km-aceite" name="kilometraje_aceite" type="text" inputmode="numeric"></div>
+  </div>
+
+  <p class="form-note" id="nuevaNota" aria-live="polite"></p>
+  <button class="btn btn--cta btn--full" type="submit">Continuar a fotos y video</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mecanico/nueva.js') }}"></script>
+{% endblock %}

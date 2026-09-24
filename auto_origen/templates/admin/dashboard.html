@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block title %}Panel admin — AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Panel Autoorigen</h2>
+    </div>
+
+    <div class="stat-grid" data-reveal="">
+      <div class="stat-card"><span class="stat-card__n">{{ total_clientes }}</span><span class="stat-card__k">Clientes</span></div>
+      <div class="stat-card"><span class="stat-card__n">{{ total_vehiculos }}</span><span class="stat-card__k">Vehículos</span></div>
+      <div class="stat-card"><span class="stat-card__n">{{ citas_pendientes|length }}</span><span class="stat-card__k">Citas pendientes</span></div>
+      <div class="stat-card"><span class="stat-card__n">{{ ordenes_activas|length }}</span><span class="stat-card__k">Órdenes activas</span></div>
+    </div>
+
+    <div class="admin-links" data-reveal="">
+      <a class="btn btn--ghost" href="{{ url_for('admin.clientes') }}">Clientes</a>
+      <a class="btn btn--ghost" href="{{ url_for('admin.vehiculos') }}">Vehículos</a>
+      <a class="btn btn--ghost" href="{{ url_for('admin.citas') }}">Citas</a>
+      {% if current_user.es_superadmin %}
+      <a class="btn btn--ghost" href="{{ url_for('admin.usuarios') }}">Usuarios admin</a>
+      <a class="btn btn--ghost" href="{{ url_for('admin.mecanicos') }}">Mecánicos (app Android)</a>
+      <a class="btn btn--ghost" href="{{ url_for('admin.api_tokens') }}">Tokens app móvil</a>
+      {% endif %}
+    </div>
+
+    <div class="section-head" style="margin-top:56px;">
+      <h2>Citas pendientes</h2>
+    </div>
+    {% if citas_pendientes %}
+    <div class="table-scroll">
+      <table class="admin-table">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Cliente</th><th>Teléfono</th><th>Servicio</th></tr></thead>
+        <tbody>
+          {% for cita in citas_pendientes %}
+          <tr>
+            <td>{{ cita.fecha }} {{ cita.hora }}</td>
+            <td>{{ "Carro al taller" if cita.tipo == "vehiculo" else "Visita" }}</td>
+            <td>{{ cita.cliente_nombre }}</td>
+            <td>{{ cita.cliente_telefono }}</td>
+            <td>{{ cita.servicio or "—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="section-lede">No hay citas pendientes.</p>
+    {% endif %}
+
+    <div class="section-head" style="margin-top:56px;">
+      <h2>Órdenes activas</h2>
+    </div>
+    {% if ordenes_activas %}
+    <div class="table-scroll">
+      <table class="admin-table">
+        <thead><tr><th>Placa</th><th>Título</th><th>Etapa</th><th></th></tr></thead>
+        <tbody>
+          {% for orden in ordenes_activas %}
+          <tr>
+            <td>{{ orden.vehiculo_placa }}</td>
+            <td>{{ orden.titulo }}</td>
+            <td><span class="badge">{{ orden.estado_actual }}</span></td>
+            <td><a class="btn btn--ghost btn--small" href="{{ url_for('admin.orden_detalle', orden_id=orden.id) }}">Abrir</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="section-lede">No hay órdenes activas.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

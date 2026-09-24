@@ -1,0 +1,22 @@
+{% extends "mecanico/base.html" %}
+{% block title %}Observaciones — AutoorigenInspect{% endblock %}
+{% block content %}
+<h1 class="mecanico-titulo">Observaciones</h1>
+<p class="mecanico-subtitulo">Último paso antes de cerrar esta inspección.</p>
+
+<form class="contact-form" id="formObservaciones" novalidate>
+  <div class="field">
+    <label for="o-mecanico">Observación del mecánico</label>
+    <textarea id="o-mecanico" name="observacion_mecanico" rows="4"></textarea>
+  </div>
+  <div class="field">
+    <label for="o-cliente">Comentario del cliente</label>
+    <textarea id="o-cliente" name="comentario_cliente" rows="4"></textarea>
+  </div>
+  <p class="form-note" id="observacionesNota" aria-live="polite"></p>
+  <button class="btn btn--cta btn--full" type="submit">Finalizar inspección</button>
+</form>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mecanico/observaciones.js') }}" data-orden-id="{{ orden_id }}"></script>
+{% endblock %}

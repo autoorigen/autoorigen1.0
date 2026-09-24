@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}Historia mecánica del vehículo | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">TU VEHÍCULO</p>
+      <h2 data-reveal="">Historia mecánica del vehículo</h2>
+      <p class="section-lede" data-reveal="">
+        Ingresa la placa y el código de acceso de tu vehículo. Ese código te lo
+        entrega el taller cuando dejas tu carro — pídelo si todavía no lo tienes.
+      </p>
+    </div>
+
+    {% if error %}
+    <ul class="form-errors" data-reveal="">
+      <li>{{ error }}</li>
+    </ul>
+    {% endif %}
+
+    <form class="contact-form form--narrow" method="post" action="{{ url_for('historial.verificar') }}" data-reveal="">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label for="h-placa">Placa del vehículo</label>
+        <input id="h-placa" name="placa" type="text" autocapitalize="characters" placeholder="ABC123" required>
+      </div>
+      <div class="field">
+        <label for="h-codigo">Código de acceso</label>
+        <input id="h-codigo" name="codigo_acceso" type="text" autocapitalize="characters" placeholder="Lo entrega el taller" required>
+      </div>
+      <button class="btn btn--cta btn--full" type="submit">Ver historia del vehículo</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

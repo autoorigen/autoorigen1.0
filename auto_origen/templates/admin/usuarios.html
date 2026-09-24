@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block title %}Usuarios admin — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Usuarios admin</h2>
+      <p class="section-lede"><a href="{{ url_for('admin.dashboard') }}">← Volver al panel</a></p>
+    </div>
+
+    <details class="admin-form-toggle" data-reveal="">
+      <summary class="btn btn--cta btn--small">Nuevo usuario admin</summary>
+      <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.usuarios') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field"><label>Usuario</label><input name="usuario" type="text" required></div>
+        <div class="field"><label>Contraseña (mínimo 8 caracteres)</label><input name="password" type="password" minlength="8" required></div>
+        <div class="field">
+          <label>Rol</label>
+          <select name="rol">
+            <option value="admin">Admin</option>
+            <option value="superadmin">Superadmin</option>
+          </select>
+        </div>
+        <button class="btn btn--cta btn--full" type="submit">Crear usuario</button>
+      </form>
+    </details>
+
+    <div class="table-scroll" data-reveal="">
+      <table class="admin-table">
+        <thead><tr><th>Usuario</th><th>Rol</th><th>Creado</th><th></th></tr></thead>
+        <tbody>
+          {% for admin in usuarios %}
+          <tr>
+            <td>{{ admin.usuario }}</td>
+            <td><span class="badge">{{ admin.rol }}</span></td>
+            <td>{{ admin.creado_en[:10] }}</td>
+            <td>
+              <form method="post" action="{{ url_for('admin.eliminar_usuario', admin_id=admin.id) }}" onsubmit="return confirm('¿Eliminar este usuario admin?');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn--ghost btn--small" type="submit">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

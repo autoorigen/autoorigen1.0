@@ -1,0 +1,10 @@
+{% extends "mecanico/base.html" %}
+{% block title %}Detalle de inspección — AutoorigenInspect{% endblock %}
+{% block content %}
+<h1 class="mecanico-titulo">Detalle de la inspección</h1>
+<p class="mecanico-cargando" id="detalleCargando">Cargando…</p>
+<div id="detalleContenido"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mecanico/detalle.js') }}" data-orden-id="{{ orden_id }}"></script>
+{% endblock %}

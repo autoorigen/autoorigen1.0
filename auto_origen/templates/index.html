@@ -1,0 +1,441 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- ============ HERO ============ -->
+<section class="hero" id="inicio">
+  <div aria-hidden="true" class="hero__media">
+    <div class="ph-box ph-box--fill hero__video-ph">
+      <span class="ph-box__tag">PLACEHOLDER — VIDEO</span>
+      <p class="ph-box__label">[VIDEO REAL DE UNA RESTAURACIÓN AUTOORIGEN AQUÍ]</p>
+    </div>
+    <div class="hero__scanlines"></div>
+    <div class="hero__grid"></div>
+  </div>
+  <div class="wrap hero__content">
+    <p class="eyebrow reveal" data-reveal="">AUTOORIGEN · TALLER · DIAGNÓSTICO · RESTAURACIÓN</p>
+    <h1 aria-label="Entender. Reparar. Restaurar. Evolucionar." class="hero__title">
+      <span class="hero__line reveal" data-reveal="" style="--d:0">ENTENDER.</span>
+      <span class="hero__line reveal" data-reveal="" style="--d:1">REPARAR.</span>
+      <span class="hero__line reveal" data-reveal="" style="--d:2">RESTAURAR.</span>
+      <span class="hero__line hero__line--accent reveal" data-reveal="" style="--d:3">EVOLUCIONAR.</span>
+    </h1>
+    <p class="hero__sub reveal" data-reveal="" style="--d:4">
+      Cada vehículo tiene una historia. Antes de reparar, buscamos su origen:
+      qué le pasó, por qué le pasó y qué necesita realmente para volver a su mejor estado.
+    </p>
+    <div class="hero__actions reveal" data-reveal="" style="--d:5">
+      <a class="btn btn--ghost" href="#nuestra-historia">Conoce nuestra historia</a>
+      <a class="btn btn--cta" href="{{ url_for('public.cita_vehiculo') }}">Agenda tu cita</a>
+    </div>
+  </div>
+  <a aria-label="Bajar a la siguiente sección" class="hero__scroll-hint" href="#nosotros">
+    <span></span>
+  </a>
+</section>
+
+<!-- ============ NOSOTROS ============ -->
+<section class="section" id="nosotros">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">NOSOTROS</p>
+      <h2 data-reveal="">Un padre, un hijo, y años bajo el capó.</h2>
+    </div>
+    <div class="grid-2 nosotros__grid">
+      <div class="nosotros__copy" data-reveal="">
+        <p>
+          Autoorigen nace de la experiencia de un padre y un hijo. Él empezó en la mecánica
+          desde muy joven, alrededor de los 19 años, y con el tiempo también trabajó como
+          asesor comercial de vehículos. Su hijo empezó trabajando a su lado y pasó por esa
+          misma experiencia comercial.
+        </p>
+        <p>
+          En algún momento decidieron emprender juntos: una compraventa de vehículos con
+          recursos, conocimiento y esfuerzo propio. Fue un proyecto ambicioso que terminó
+          presentando dificultades y no llegó a donde esperaban. No lo contamos como una
+          historia de éxito perfecto, porque no lo fue. Pero de ahí salió gran parte de lo
+          que hoy es Autoorigen: transparencia, responsabilidad, atención al cliente,
+          negociación, conocimiento del mercado y la convicción de que las soluciones
+          honestas son las únicas que realmente funcionan.
+        </p>
+        <p>
+          Hoy, después de varios años trabajando juntos, seguimos aplicando esa misma
+          experiencia — ahora puesta al servicio de cada vehículo que llega al taller.
+        </p>
+      </div>
+      <ul class="tag-log" data-reveal="">
+        <li><span class="tag-log__k">ORIGEN</span><span class="tag-log__v">Padre + hijo, experiencia compartida</span></li>
+        <li><span class="tag-log__k">INICIO EN MECÁNICA</span><span class="tag-log__v">~19 años de edad</span></li>
+        <li><span class="tag-log__k">EXPERIENCIA PREVIA</span><span class="tag-log__v">Asesoría comercial de vehículos</span></li>
+        <li><span class="tag-log__k">PRIMER EMPRENDIMIENTO</span><span class="tag-log__v">Compraventa propia — con dificultades y aprendizajes</span></li>
+        <li><span class="tag-log__k">TRAYECTORIA CONJUNTA</span><span class="tag-log__v">~7 años trabajando juntos</span></li>
+        <li><span class="tag-log__k">APRENDIZAJES</span><span class="tag-log__v">Transparencia · Responsabilidad · Honestidad</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICIOS ============ -->
+<section class="section section--panel" id="servicios">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">SERVICIOS</p>
+      <h2 data-reveal="">Cualquier vehículo, cualquier problema, un mismo proceso.</h2>
+      <p class="section-lede" data-reveal="">
+        No asumimos la falla antes de investigarla. Estos son los frentes en los que trabajamos
+        hoy en Autoorigen.
+      </p>
+    </div>
+    <div class="services-grid">
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><path d="M24 6l4 8h8l-5 7 2 9-9-5-9 5 2-9-5-7h8z"></path></svg>
+        </div>
+        <h3>Mecánica integral</h3>
+        <p>General, gasolina, diésel, motor, transmisión, frenos, suspensión y dirección.</p>
+      </article>
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><path d="M26 4L8 28h12l-2 16 20-24H26z"></path></svg>
+        </div>
+        <h3>Electricidad y electrónica</h3>
+        <p>Diagnóstico eléctrico y electrónico, sensores, sistemas y escaneo computarizado.</p>
+      </article>
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"></circle><circle cx="24" cy="24" r="4"></circle></svg>
+        </div>
+        <h3>Latonería y pintura</h3>
+        <p>Reparación de golpes, enderezamiento, preparación, pintura, pulido y acabados.</p>
+      </article>
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><path d="M8 24a16 16 0 1132 0 16 16 0 01-32 0z"></path><path d="M24 14v10l7 4"></path></svg>
+        </div>
+        <h3>Restauración</h3>
+        <p>Recuperación funcional y estética integral, hasta el máximo esplendor del vehículo.</p>
+      </article>
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><path d="M10 34l14-24 14 24z"></path><path d="M18 34l6-10 6 10"></path></svg>
+        </div>
+        <h3>Modificaciones y personalización</h3>
+        <p>Cambios pensados para el uso real que le vas a dar a tu vehículo.</p>
+      </article>
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><rect height="28" rx="2" width="28" x="10" y="10"></rect><path d="M16 24h16M24 16v16"></path></svg>
+        </div>
+        <h3>Diagnóstico precompra</h3>
+        <p>Revisión antes de comprar, para decidir con información real y sin sorpresas.</p>
+      </article>
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><path d="M24 8a10 10 0 100 20 10 10 0 000-20z"></path><path d="M10 40c2-8 8-12 14-12s12 4 14 12"></path></svg>
+        </div>
+        <h3>Asesoramiento personalizado</h3>
+        <p>Te explicamos las alternativas reales según lo que necesita tu vehículo y tu bolsillo.</p>
+      </article>
+      <article class="service-card" data-reveal="">
+        <div aria-hidden="true" class="service-card__icon">
+          <svg viewBox="0 0 48 48"><rect height="16" rx="2" width="26" x="6" y="14"></rect><path d="M32 20l10-4v16l-10-4z"></path></svg>
+        </div>
+        <h3>Compra y venta de vehículos</h3>
+        <p>Acompañamiento en el proceso de comprar o vender, con transparencia como base.</p>
+      </article>
+    </div>
+    <p class="services-scope" data-reveal="">
+      Trabajamos con particulares, camionetas, SUV, vehículos comerciales, clásicos, premium,
+      deportivos, eléctricos, híbridos y motocicletas.
+    </p>
+  </div>
+</section>
+
+<!-- ============ CÓMO TRABAJAMOS ============ -->
+<section class="section" id="proceso">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">CÓMO TRABAJAMOS</p>
+      <h2 data-reveal="">Primero el origen. Después la solución.</h2>
+      <p class="section-lede" data-reveal="">
+        Antes de tocar el vehículo, seguimos un mismo proceso — sin importar si el problema
+        es mecánico, eléctrico o estético. Este es el mismo proceso que vas a ver reflejado
+        en la <a href="{{ url_for('historial.buscar') }}">línea de tiempo en vivo</a> de tu vehículo.
+      </p>
+    </div>
+    <ol class="process">
+      <li class="process__step" data-reveal="">
+        <span class="process__num">01</span>
+        <h3>Entender</h3>
+        <p>Escuchamos al propietario y conocemos la historia del vehículo.</p>
+      </li>
+      <li class="process__step" data-reveal="">
+        <span class="process__num">02</span>
+        <h3>Diagnosticar</h3>
+        <p>Inspección visual, pruebas, escáner, mediciones y comprobaciones a fondo.</p>
+      </li>
+      <li class="process__step" data-reveal="">
+        <span class="process__num">03</span>
+        <h3>Explicar</h3>
+        <p>Qué encontramos, por qué ocurre y qué alternativas existen, sin tecnicismos innecesarios.</p>
+      </li>
+      <li class="process__step" data-reveal="">
+        <span class="process__num">04</span>
+        <h3>Reparar</h3>
+        <p>Ejecutamos el trabajo acordado con el propietario.</p>
+      </li>
+      <li class="process__step" data-reveal="">
+        <span class="process__num">05</span>
+        <h3>Verificar</h3>
+        <p>Comprobamos que la solución funciona y revisamos si hay algo más por informar.</p>
+      </li>
+      <li class="process__step" data-reveal="">
+        <span class="process__num">06</span>
+        <h3>Documentar</h3>
+        <p>Fotos, video y aprendizajes que después se convierten en contenido educativo.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ PROYECTOS ============ -->
+<section class="section section--panel" id="proyectos">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">PROYECTOS</p>
+      <h2 data-reveal="">Historias que hemos transformado</h2>
+      <p class="section-lede" data-reveal="">
+        Cada proyecto documentado sigue el mismo recorrido: del problema al resultado.
+        Las tarjetas de abajo son una plantilla de ejemplo — se reemplazarán con casos reales.
+      </p>
+    </div>
+    <div class="project-card ph-box" data-reveal="">
+      <span class="ph-box__tag">PROYECTO DE EJEMPLO — REEMPLAZAR CON CASO REAL</span>
+      <div aria-hidden="true" class="project-card__media ph-box__stripes">
+        <p class="ph-box__label">[FOTOGRAFÍA / VIDEO ANTES–DESPUÉS AQUÍ]</p>
+      </div>
+      <div class="project-card__body">
+        <h3>[Nombre del vehículo — ej. marca y modelo]</h3>
+        <div class="project-card__pipeline">
+          <span>Vehículo</span><span>→</span><span>Problema</span><span>→</span>
+          <span>Investigación</span><span>→</span><span>Diagnóstico</span><span>→</span>
+          <span>Proceso</span><span>→</span><span>Reparación</span><span>→</span><span>Resultado</span>
+        </div>
+        <dl class="project-card__facts">
+          <div><dt>Problema</dt><dd>[Descripción del síntoma reportado por el propietario]</dd></div>
+          <div><dt>Diagnóstico</dt><dd>[Causa encontrada tras la investigación]</dd></div>
+          <div><dt>Proceso</dt><dd>[Reparaciones y trabajos realizados]</dd></div>
+          <div><dt>Resultado</dt><dd>[Estado final del vehículo]</dd></div>
+        </dl>
+        <div class="project-card__links">
+          <span class="chip">[ENLACE A YOUTUBE]</span>
+          <span class="chip">[ENLACE A INSTAGRAM]</span>
+          <span class="chip">[ENLACE A TIKTOK]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VEHÍCULOS ============ -->
+<section class="section" id="vehiculos">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">VEHÍCULOS</p>
+      <h2 data-reveal="">Vehículos Autoorigen</h2>
+      <p class="section-lede" data-reveal="">
+        Vehículos disponibles a través de Autoorigen. Próximamente: un servicio para que
+        terceros evalúen, reparen, preparen y publiquen sus vehículos con nosotros.
+      </p>
+    </div>
+    <div class="vehicles-grid">
+      <article class="vehicle-card ph-box" data-reveal="">
+        <span class="ph-box__tag">VEHÍCULO DE EJEMPLO — REEMPLAZAR CON INFORMACIÓN REAL</span>
+        <div aria-hidden="true" class="vehicle-card__media ph-box__stripes">
+          <p class="ph-box__label">[FOTOGRAFÍA DEL VEHÍCULO]</p>
+        </div>
+        <div class="vehicle-card__body">
+          <h3>[Marca y modelo]</h3>
+          <ul class="vehicle-card__specs">
+            <li>[Año]</li><li>[Kilometraje]</li><li>[Estado]</li>
+          </ul>
+          <p class="vehicle-card__price">[Precio]</p>
+        </div>
+      </article>
+      <article class="vehicle-card ph-box" data-reveal="">
+        <span class="ph-box__tag">VEHÍCULO DE EJEMPLO — REEMPLAZAR CON INFORMACIÓN REAL</span>
+        <div aria-hidden="true" class="vehicle-card__media ph-box__stripes">
+          <p class="ph-box__label">[FOTOGRAFÍA DEL VEHÍCULO]</p>
+        </div>
+        <div class="vehicle-card__body">
+          <h3>[Marca y modelo]</h3>
+          <ul class="vehicle-card__specs">
+            <li>[Año]</li><li>[Kilometraje]</li><li>[Estado]</li>
+          </ul>
+          <p class="vehicle-card__price">[Precio]</p>
+        </div>
+      </article>
+      <article class="vehicle-card ph-box" data-reveal="">
+        <span class="ph-box__tag">VEHÍCULO DE EJEMPLO — REEMPLAZAR CON INFORMACIÓN REAL</span>
+        <div aria-hidden="true" class="vehicle-card__media ph-box__stripes">
+          <p class="ph-box__label">[FOTOGRAFÍA DEL VEHÍCULO]</p>
+        </div>
+        <div class="vehicle-card__body">
+          <h3>[Marca y modelo]</h3>
+          <ul class="vehicle-card__specs">
+            <li>[Año]</li><li>[Kilometraje]</li><li>[Estado]</li>
+          </ul>
+          <p class="vehicle-card__price">[Precio]</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APRENDE ============ -->
+<section class="section section--panel" id="aprende">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">APRENDE</p>
+      <h2 data-reveal="">Autoorigen Aprende</h2>
+      <p class="section-lede" data-reveal="">
+        Compartimos lo que encontramos en el taller: diagnósticos, procesos, restauraciones
+        y mecánica explicada de forma simple. Con el tiempo, este espacio evolucionará hacia
+        <strong>Autoorigen Academy</strong>, con cursos estructurados.
+      </p>
+    </div>
+    <div class="social-grid">
+      <a class="social-card ph-box" data-reveal="" href="#" onclick="return false;">
+        <span class="ph-box__tag">PLACEHOLDER</span>
+        <svg class="social-card__icon" viewBox="0 0 24 24"><path d="M23 12s0-3.6-.5-5.3c-.3-1-1-1.8-2-2C18.9 4 12 4 12 4s-6.9 0-8.5.7c-1 .2-1.7 1-2 2C1 8.4 1 12 1 12s0 3.6.5 5.3c.3 1 1 1.8 2 2C5.1 20 12 20 12 20s6.9 0 8.5-.7c1-.2 1.7-1 2-2 .5-1.7.5-5.3.5-5.3zM9.7 15.4V8.6L15.8 12l-6.1 3.4z"></path></svg>
+        <span>[ENLACE A YOUTUBE]</span>
+      </a>
+      <a class="social-card ph-box" data-reveal="" href="#" onclick="return false;">
+        <span class="ph-box__tag">PLACEHOLDER</span>
+        <svg class="social-card__icon" viewBox="0 0 24 24"><rect height="20" rx="5" width="20" x="2" y="2"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="18" cy="6" r="1"></circle></svg>
+        <span>[ENLACE A INSTAGRAM]</span>
+      </a>
+      <a class="social-card ph-box" data-reveal="" href="#" onclick="return false;">
+        <span class="ph-box__tag">PLACEHOLDER</span>
+        <svg class="social-card__icon" viewBox="0 0 24 24"><path d="M16 3c.6 2.6 2.2 4.2 5 4.6v3.2c-1.8 0-3.4-.6-5-1.6v6.4a5.8 5.8 0 11-5-5.7v3.3a2.6 2.6 0 102.6 2.6V3H16z"></path></svg>
+        <span>[ENLACE A TIKTOK]</span>
+      </a>
+      <a class="social-card ph-box" data-reveal="" href="#" onclick="return false;">
+        <span class="ph-box__tag">PLACEHOLDER</span>
+        <svg class="social-card__icon" viewBox="0 0 24 24"><path d="M14 9V6.5c0-.8.5-1.2 1.3-1.2H17V2h-2.8C11.8 2 10 3.8 10 6.5V9H7v3h3v10h4V12h2.6l.4-3H14z"></path></svg>
+        <span>[ENLACE A FACEBOOK]</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NUESTRA HISTORIA ============ -->
+<section class="section" id="nuestra-historia">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">NUESTRA HISTORIA</p>
+      <h2 data-reveal="">El diagnóstico de nuestro propio origen</h2>
+      <p class="section-lede" data-reveal="">
+        Si tuviéramos que diagnosticar cómo llegamos hasta acá, el registro se leería así:
+      </p>
+    </div>
+    <ul class="timeline">
+      <li data-reveal="">
+        <span class="timeline__tag">LOG · INICIO</span>
+        <p>Un joven de unos 19 años empieza a formarse en mecánica.</p>
+      </li>
+      <li data-reveal="">
+        <span class="timeline__tag">LOG · TRAYECTORIA</span>
+        <p>Años de experiencia práctica en el mundo automotor, incluyendo asesoría comercial de vehículos.</p>
+      </li>
+      <li data-reveal="">
+        <span class="timeline__tag">LOG · CONTINUIDAD</span>
+        <p>Su hijo se suma al trabajo diario y vive la misma experiencia comercial.</p>
+      </li>
+      <li data-reveal="">
+        <span class="timeline__tag">LOG · RIESGO</span>
+        <p>Emprenden juntos una compraventa de vehículos propia. El proyecto enfrenta dificultades y no continúa como esperaban.</p>
+      </li>
+      <li data-reveal="">
+        <span class="timeline__tag">LOG · APRENDIZAJE</span>
+        <p>De esa experiencia quedan lecciones que hoy son la base de Autoorigen: transparencia, responsabilidad y soluciones honestas.</p>
+      </li>
+      <li data-reveal="">
+        <span class="timeline__tag">LOG · ACTUALIDAD</span>
+        <p>Alrededor de 7 años trabajando juntos, ahora bajo el nombre Autoorigen.</p>
+      </li>
+    </ul>
+    <p class="vision-note" data-reveal="">
+      La visión a futuro incluye proyectos propios de restauración, una academia con cursos
+      estructurados y, más adelante, iniciativas para apoyar a personas cuyo vehículo es su
+      principal herramienta de trabajo.
+    </p>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section class="section section--panel" id="contacto">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">CONTACTO</p>
+      <h2 data-reveal="">Cuéntanos qué le pasa a tu vehículo</h2>
+      <p class="section-lede" data-reveal="">
+        Contanos los síntomas y el contexto. Nosotros nos encargamos de encontrar el origen.
+      </p>
+    </div>
+    <div class="grid-2 contact__grid">
+      <div class="contact__info" data-reveal="">
+        <ul class="contact__list">
+          <li><span class="contact__k">WhatsApp</span><span class="contact__v">[WHATSAPP AUTOORIGEN]</span></li>
+          <li><span class="contact__k">Teléfono</span><span class="contact__v">[TELÉFONO]</span></li>
+          <li><span class="contact__k">Dirección</span><span class="contact__v">[DIRECCIÓN]</span></li>
+          <li><span class="contact__k">Horario</span><span class="contact__v">[HORARIO]</span></li>
+        </ul>
+        <a class="btn btn--cta" href="#" onclick="return false;">Hablar por WhatsApp</a>
+      </div>
+      <form class="contact-form" data-reveal="" id="contactForm" novalidate="">
+        <div class="field">
+          <label for="f-nombre">Nombre</label>
+          <input autocomplete="name" id="f-nombre" name="nombre" required="" type="text">
+        </div>
+        <div class="field">
+          <label for="f-telefono">Teléfono</label>
+          <input autocomplete="tel" id="f-telefono" name="telefono" required="" type="tel">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-tipo">Tipo de vehículo</label>
+            <input id="f-tipo" name="tipo" placeholder="Auto, camioneta, moto…" type="text">
+          </div>
+          <div class="field">
+            <label for="f-marca">Marca</label>
+            <input id="f-marca" name="marca" type="text">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="f-modelo">Modelo</label>
+            <input id="f-modelo" name="modelo" type="text">
+          </div>
+          <div class="field">
+            <label for="f-anio">Año</label>
+            <input id="f-anio" inputmode="numeric" name="anio" type="text">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-problema">¿Qué problema presenta?</label>
+          <input id="f-problema" name="problema" type="text">
+        </div>
+        <div class="field">
+          <label for="f-mensaje">Mensaje</label>
+          <textarea id="f-mensaje" name="mensaje" required="" rows="4"></textarea>
+        </div>
+        <button class="btn btn--ghost btn--upload" disabled="" type="button">
+          Adjuntar foto o video — próximamente
+        </button>
+        <button class="btn btn--cta btn--full" type="submit">Enviar mensaje</button>
+        <p aria-live="polite" class="form-note" id="formNote" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

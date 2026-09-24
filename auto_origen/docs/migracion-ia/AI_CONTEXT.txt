@@ -1,0 +1,723 @@
+===== 00_LEEME_PRIMERO.md =====
+# AUTOORIGEN — PAQUETE DE MIGRACIÓN A OTRA IA
+
+Fecha de corte: 24 de septiembre de 2026
+Proyecto principal: Autoorigen / AutoorigenInspect
+Aplicación móvil: AO
+Estado: desarrollo activo
+
+## Objetivo de este paquete
+
+Este paquete contiene el contexto técnico, funcional y de negocio necesario para entregar el desarrollo de Autoorigen a otra IA y continuar sin depender de este chat.
+
+## Regla crítica
+
+Este paquete documenta lo que se conoce del proyecto y separa:
+- HECHO: confirmado en conversaciones/pruebas.
+- PLANIFICADO: arquitectura o funcionalidad acordada.
+- PENDIENTE: todavía debe implementarse o verificarse.
+- NO DISPONIBLE: el archivo/código no está presente en el material recuperable.
+
+## Estado actual resumido
+
+Se está desarrollando una aplicación nativa para inspecciones vehiculares llamada `AutoorigenInspect`, cuyo nombre visible aceptado es `AO`.
+
+Flujo base acordado:
+Nueva inspección → placa/vehículo → crear sesión → cámara → fotos/videos/notas → finalizar → Mis inspecciones → informe.
+
+La arquitectura propuesta usa SwiftUI y almacenamiento local por inspección. La cámara usa AVFoundation. Se contemplan posteriormente Vision/OCR, Speech/Audio e IA.
+
+## Lo que NO debe hacer la nueva IA
+
+1. No reiniciar el proyecto desde cero sin analizar primero este documento.
+2. No cambiar de tecnología sin explicar ventajas/desventajas.
+3. No inventar archivos, clases o código que no estén disponibles.
+4. No eliminar funcionalidades existentes para resolver un error sin justificarlo.
+5. No avanzar muchas etapas de una sola vez: el usuario quiere comprender el código.
+6. No entregar código sin explicar qué hace.
+
+
+===== 01_CONTEXTO_NEGOCIO_AUTOORIGEN.md =====
+# CONTEXTO DE NEGOCIO — AUTOORIGEN
+
+## Qué es Autoorigen
+
+Autoorigen es un proyecto/taller automotriz con enfoque integral:
+- mecánica general
+- gasolina y diésel
+- frenos, suspensión, dirección, motor y transmisión
+- electricidad y electrónica
+- diagnóstico computarizado
+- latonería y pintura
+- restauración y recuperación
+- modificaciones/personalización
+- diagnóstico precompra
+- asesoría
+- compra y venta de vehículos
+
+Tipos de vehículos contemplados:
+- automóviles
+- camionetas/SUV
+- vehículos comerciales y de trabajo
+- clásicos
+- premium/deportivos
+- eléctricos
+- híbridos
+- motocicletas
+
+La maquinaria amarilla quedó fuera del alcance inicial del concepto general de Autoorigen.
+
+## Filosofía
+
+La metodología conceptual es:
+
+Entender → Diagnosticar → Explicar → Reparar → Verificar → Documentar
+
+La aplicación debe convertir el proceso del taller en evidencia estructurada.
+
+## Visión tecnológica
+
+Autoorigen no quiere solamente una aplicación aislada. La visión de largo plazo incluye:
+- clientes
+- vehículos
+- órdenes de trabajo
+- checklists
+- evidencia fotográfica/video
+- historial
+- informes
+- contenido educativo
+- proyectos
+- vehículos en venta
+- futura Autoorigen Academy
+- base de conocimiento
+
+## Modelo conceptual del sistema
+
+Cliente
+└── Vehículo
+    └── Inspección / Trabajo
+        ├── Checklist
+        ├── Fotos
+        ├── Videos
+        ├── Audio / notas
+        ├── Hallazgos
+        ├── Diagnóstico
+        ├── Reparaciones
+        └── Informe
+
+## Principio de producto
+
+Cada inspección debe producir información útil, evidencia y posteriormente un informe profesional.
+
+
+===== 02_ESTADO_TECNICO_ACTUAL.md =====
+# ESTADO TÉCNICO ACTUAL — AUTOORIGENINSPECT
+
+Fecha de corte: 24/09/2026
+
+## Entorno de desarrollo conocido
+
+Equipo principal usado para el desarrollo iOS:
+- MacBook Pro 13" 2020 Intel
+- macOS 15.7.7
+- Xcode 16.4
+- Proyecto: `AutoorigenInspect`
+- Swift / SwiftUI
+- Bundle: `com.autoorigen.AutoorigenInspect`
+- Testing/Storage configurado inicialmente como `None`
+
+El usuario también dispone de Linux Mint y quiere poder avanzar allí en código aunque la compilación/exportación final de iOS se haga posteriormente con Xcode.
+
+## Estado funcional confirmado
+
+1. Proyecto nativo abierto/instalado en iPhone.
+2. Nombre visible deseado: `AO`.
+3. Se creó el flujo:
+   AO → Nueva inspección → placa/vehículo → iniciar.
+4. Se separaron archivos SwiftUI como `ContentView.swift` y `NewInspectionView.swift`.
+5. Se configuraron permisos para cámara y micrófono.
+6. Se creó `CameraService.swift` usando `AVCaptureSession`.
+7. En pruebas previas se confirmó captura de placa, álbum dinámico y guardado de video en un prototipo anterior.
+8. El prototipo de Atajos no mantenía correctamente la sesión entre grabaciones, por lo que se decidió pasar a aplicación nativa con sesión persistente.
+9. En una prueba reciente se indicó que una pantalla/flujo apareció correctamente y se continuó al siguiente paso.
+
+## Problemas recientes
+
+### Problema 1 — CameraView / inspection
+
+Apareció un error al pasar la inspección a `CameraView`, relacionado con algo equivalente a:
+
+`CameraView(inspection: inspection ... )`
+
+La solución exacta debe verificarse en el código fuente real antes de documentarla como definitiva.
+
+### Problema 2 — Finalizar
+
+Se reportó que el botón `Finalizar` no ejecutaba ninguna acción visible.
+
+### Problema 3 — Mis inspecciones
+
+Se reportó que `Mis Inspecciones` no mostraba registros y que no era claro dónde estaban quedando archivados los documentos.
+
+Estos dos problemas son especialmente importantes para la continuidad: la siguiente IA debe revisar el modelo de persistencia y el flujo de navegación antes de agregar nuevas funciones.
+
+## Arquitectura funcional acordada
+
+Nueva inspección
+→ crear objeto/sesión `Inspection`
+→ guardar placa y datos del vehículo
+→ entrar a cámara
+→ asociar medios a esa inspección
+→ finalizar
+→ persistir
+→ mostrar en `Mis Inspecciones`
+→ abrir detalle
+→ generar informe
+
+## Tecnologías previstas
+
+- Swift
+- SwiftUI
+- AVFoundation
+- almacenamiento local
+- Vision para OCR posteriormente
+- Speech/audio posteriormente
+- IA posteriormente
+- exportación de informes posteriormente
+
+No se debe asumir todavía que todas estas capas estén implementadas.
+
+
+===== 03_ARQUITECTURA_Y_MODELO_DATOS.md =====
+# ARQUITECTURA PROPUESTA
+
+## Capas
+
+### Presentación
+SwiftUI:
+- ContentView
+- NewInspectionView
+- CameraView
+- Mis Inspecciones
+- InspectionDetailView (prevista/por verificar)
+
+### Dominio
+Entidad principal:
+`Inspection`
+
+Conceptualmente:
+
+```text
+Inspection
+├── id
+├── fecha
+├── placa
+├── marca
+├── modelo
+├── año
+├── kilometraje
+├── estado
+├── fotos
+├── videos
+├── audios/notas
+├── hallazgos
+└── informe
+```
+
+Los nombres exactos de propiedades deben tomarse del código real.
+
+### Servicios
+
+`CameraService`
+- administra `AVCaptureSession`
+- cámara
+- captura de imágenes
+- video
+
+Servicios futuros:
+- OCRService
+- SpeechService
+- StorageService
+- ReportService
+- AIService
+
+## Persistencia
+
+El requisito funcional es que una inspección sobreviva al cierre de las vistas y aparezca en `Mis Inspecciones`.
+
+La implementación concreta de persistencia todavía debe verificarse:
+- UserDefaults / Codable
+- archivos JSON
+- SwiftData
+- Core Data
+- otra solución
+
+NO asumir cuál está implementada sin revisar el proyecto.
+
+## Regla de diseño
+
+Los archivos multimedia deben pertenecer a una inspección concreta, no solamente a una carpeta global.
+
+Conceptualmente:
+
+```text
+Autoorigen/
+└── Inspections/
+    └── <inspection-id>/
+        ├── inspection.json
+        ├── photos/
+        ├── videos/
+        ├── audio/
+        └── report/
+```
+
+Esta es una estructura conceptual, no una afirmación de que ya exista físicamente.
+
+## Navegación
+
+```text
+AO
+│
+├── Nueva inspección
+│   ├── datos vehículo
+│   └── Iniciar
+│
+├── Cámara
+│   ├── foto
+│   ├── video
+│   └── volver / finalizar
+│
+└── Mis inspecciones
+    ├── lista
+    └── detalle
+        └── informe
+```
+
+
+===== 04_ROADMAP_CONTINUACION.md =====
+# ROADMAP DE CONTINUACIÓN
+
+## FASE 0 — Recuperar el proyecto real
+
+PRIORIDAD MÁXIMA
+
+1. Obtener el proyecto completo `AutoorigenInspect`.
+2. Exportar todos los `.swift`.
+3. Obtener `.xcodeproj` o `.xcworkspace`.
+4. Obtener `Info.plist` y configuración relevante.
+5. Registrar dependencias/SPM/CocoaPods si existen.
+6. Confirmar estructura de carpetas.
+7. Compilar sin modificar nada.
+8. Ejecutar la app en iPhone.
+9. Crear una inspección de prueba.
+10. Comprobar dónde se almacena.
+
+## FASE 1 — Persistencia
+
+Resolver definitivamente:
+- crear inspección
+- guardar
+- recuperar
+- listar
+- abrir
+- eliminar/archivar
+- asociar medios
+
+Criterio de aceptación:
+Después de cerrar y volver a abrir la app, la inspección de prueba debe seguir apareciendo.
+
+## FASE 2 — Cámara
+
+- foto
+- video
+- múltiples capturas
+- asociación automática con Inspection
+- miniaturas
+- eliminación individual
+- control de permisos
+
+## FASE 3 — Finalizar
+
+El botón debe:
+1. detener captura
+2. guardar cambios
+3. cerrar sesión de inspección
+4. volver a `Mis Inspecciones` o mostrar resumen
+5. permitir abrir la inspección posteriormente
+
+## FASE 4 — Checklist
+
+Crear categorías:
+- motor
+- transmisión
+- frenos
+- suspensión
+- dirección
+- electricidad/electrónica
+- carrocería
+- pintura
+- interiores
+- neumáticos
+- niveles/fluidos
+
+Cada punto puede tener:
+- estado
+- observación
+- foto
+- video
+- severidad
+
+## FASE 5 — Evidencia inteligente
+
+OCR de placa mediante Vision.
+Reconocimiento/lectura asistida.
+Notas de voz.
+Transcripción.
+
+## FASE 6 — Informe
+
+Generar informe profesional:
+- datos del vehículo
+- cliente
+- fecha
+- técnico
+- checklist
+- hallazgos
+- evidencia
+- recomendaciones
+- firma
+- PDF
+
+## FASE 7 — IA
+
+La IA no debe inventar diagnósticos.
+
+Debe ayudar a:
+- organizar hallazgos
+- resumir evidencia
+- redactar observaciones
+- sugerir preguntas
+- estructurar informe
+
+Toda recomendación técnica debe quedar distinguida de un diagnóstico confirmado.
+
+## FASE 8 — Backend
+
+Cuando el producto local esté estable:
+- API
+- usuarios
+- autenticación
+- base de datos
+- sincronización
+- almacenamiento multimedia
+- panel web
+
+## FASE 9 — Ecosistema Autoorigen
+
+- órdenes de trabajo
+- inventario
+- clientes
+- vehículos
+- historial
+- contenido
+- vehículos en venta
+- Autoorigen Academy
+
+
+===== 05_PROMPT_MAESTRO_PARA_OTRA_IA.md =====
+# PROMPT MAESTRO — CONTINUAR AUTOORIGEN
+
+Quiero que continúes conmigo el desarrollo de mi proyecto Autoorigen.
+
+## CONTEXTO
+
+Soy el responsable de Autoorigen, un proyecto/taller automotriz. Estoy desarrollando una aplicación nativa llamada `AutoorigenInspect`, cuyo nombre visible es `AO`.
+
+La aplicación tiene como objetivo documentar inspecciones vehiculares mediante sesiones persistentes, fotos, videos, notas, hallazgos y posteriormente informes.
+
+## TECNOLOGÍA ACTUAL
+
+- Swift
+- SwiftUI
+- Xcode 16.4
+- macOS 15.7.7
+- MacBook Pro 13" 2020 Intel
+- Bundle: `com.autoorigen.AutoorigenInspect`
+
+También quiero poder desarrollar parte del código desde Linux y posteriormente compilar/exportar iOS en Xcode.
+
+## FLUJO PRINCIPAL
+
+AO
+→ Nueva inspección
+→ placa/vehículo
+→ crear sesión
+→ cámara
+→ fotos/videos/notas
+→ finalizar
+→ Mis inspecciones
+→ detalle
+→ informe
+
+## ESTADO
+
+Ya existe un proyecto nativo y se trabajó con:
+- ContentView.swift
+- NewInspectionView.swift
+- CameraService.swift
+- CameraView
+- permisos de cámara y micrófono
+
+Hubo problemas recientes:
+- error al pasar `inspection` a CameraView
+- botón Finalizar sin acción visible
+- Mis Inspecciones sin mostrar registros
+- incertidumbre sobre dónde se guardan los documentos
+
+NO inventes cómo están implementadas esas partes. Primero pide/revisa los archivos reales.
+
+## REGLAS DE TRABAJO CONMIGO
+
+1. Explícame primero el concepto.
+2. Después muéstrame el código.
+3. No me des código sin explicar qué hace.
+4. Si hay un error, analiza la causa antes de proponer cambios.
+5. No reescribas archivos completos innecesariamente.
+6. Indica exactamente qué archivo modificar.
+7. Indica exactamente qué bloque reemplazar.
+8. Después de cada cambio dime cómo probarlo.
+9. Avanza paso a paso.
+10. No asumas conocimientos que todavía no tengo.
+11. Si detectas una confusión conceptual, detente y explícala.
+12. Diferencia siempre:
+   concepto → herramienta → tecnología → implementación.
+13. Usa diagramas ASCII cuando ayuden.
+14. Relaciona los conceptos con Autoorigen.
+15. Si hay varias soluciones técnicas, compáralas antes de elegir.
+16. Conserva las funciones que ya funcionan.
+17. Antes de crear una nueva arquitectura, inspecciona la existente.
+18. No afirmes que algo está guardado si no se puede demostrar mediante código/prueba.
+
+## PRIMERA TAREA
+
+Antes de modificar código:
+1. analiza el árbol del proyecto;
+2. identifica todos los archivos Swift;
+3. identifica el modelo `Inspection`;
+4. identifica cómo se crea una inspección;
+5. identifica cómo se guarda;
+6. identifica cómo se recupera;
+7. identifica cómo `CameraView` recibe la inspección;
+8. identifica qué hace `Finalizar`;
+9. identifica qué usa `Mis Inspecciones`;
+10. compila y reporta los errores.
+
+Después de ese diagnóstico, propón el siguiente cambio mínimo.
+
+## OBJETIVO INMEDIATO
+
+Conseguir este comportamiento:
+
+Nueva inspección
+→ crear inspección
+→ cámara
+→ tomar foto/video
+→ finalizar
+→ persistir
+→ Mis Inspecciones muestra la inspección
+→ abrir inspección y ver evidencia.
+
+No avances a IA, OCR, backend o funciones complejas hasta que este flujo sea sólido.
+
+## PRINCIPIO DEL PROYECTO
+
+Autoorigen debe convertir el proceso real del taller:
+
+Entender → Diagnosticar → Explicar → Reparar → Verificar → Documentar
+
+en información estructurada y evidencia digital.
+
+
+===== 06_CHECKLIST_MIGRACION.md =====
+# CHECKLIST PARA MIGRAR A OTRA IA
+
+## Del proyecto Xcode
+
+[ ] Carpeta completa del proyecto
+[ ] `.xcodeproj` / `.xcworkspace`
+[ ] Todos los `.swift`
+[ ] Assets
+[ ] Info.plist
+[ ] Configuración de permisos
+[ ] Package dependencies
+[ ] Entitlements
+[ ] Schemes
+[ ] README existente
+[ ] Capturas de pantalla
+[ ] Videos de pruebas
+
+## Documentación
+
+[ ] Este paquete de migración
+[ ] Prompt maestro
+[ ] Estado técnico
+[ ] Arquitectura
+[ ] Roadmap
+[ ] Decisiones
+[ ] Lista de errores
+
+## Pruebas
+
+[ ] Crear inspección
+[ ] Capturar foto
+[ ] Capturar video
+[ ] Finalizar
+[ ] Cerrar app
+[ ] Abrir app
+[ ] Ver inspección
+[ ] Abrir detalle
+[ ] Ver medios
+
+## Información que la nueva IA debe pedir antes de modificar
+
+- árbol de archivos
+- archivos Swift actuales
+- error exacto de compilación
+- comportamiento observado
+- versión de Xcode
+- versión de iOS del dispositivo de prueba
+
+## Definición de terminado de la migración
+
+La nueva IA debe poder:
+1. explicar la arquitectura actual;
+2. localizar cada componente;
+3. compilar el proyecto;
+4. reproducir los problemas conocidos;
+5. proponer cambios mínimos;
+6. continuar el roadmap sin perder contexto.
+
+
+===== 07_INVENTARIO_DE_CONOCIMIENTO.md =====
+# INVENTARIO DE INFORMACIÓN RECUPERADA
+
+## Información disponible
+
+### Negocio
+- Documento maestro de Autoorigen existente.
+- Filosofía y modelo de negocio.
+- Servicios.
+- Tipos de vehículos.
+- Visión tecnológica.
+
+### Desarrollo
+- Contexto de AutoorigenInspect.
+- SwiftUI.
+- Cámara con AVFoundation.
+- Flujo de inspección.
+- Problemas de persistencia/navegación conocidos.
+
+## Información que falta para una migración técnica completa
+
+El código fuente real de Xcode no aparece como archivo recuperable en este contexto.
+
+Por lo tanto faltan por confirmar:
+- contenido exacto de `ContentView.swift`
+- contenido exacto de `NewInspectionView.swift`
+- contenido exacto de `CameraView`
+- contenido exacto de `CameraService.swift`
+- definición real de `Inspection`
+- mecanismo real de persistencia
+- árbol completo del proyecto
+- assets
+- configuración Xcode
+- dependencias
+- código de `Mis Inspecciones`
+- implementación exacta de `Finalizar`
+
+## Regla
+
+Cuando el usuario entregue esos archivos a la nueva IA, esta documentación debe utilizarse como contexto, pero el código entregado por el usuario tiene prioridad sobre cualquier descripción de este documento.
+
+
+===== 08_ESTADO_Y_DECISIONES.md =====
+# DECISIONES Y PRINCIPIOS
+
+## Decisiones confirmadas
+
+- La aplicación será nativa iOS.
+- Se utiliza SwiftUI.
+- El proyecto se llama `AutoorigenInspect`.
+- Nombre visible: `AO`.
+- La inspección debe ser una sesión persistente.
+- Los medios deben asociarse a la inspección.
+- Existirá una sección `Mis Inspecciones`.
+- El usuario quiere aprender mientras desarrolla.
+- Se quiere mantener el proyecto escalable.
+
+## Decisiones de producto
+
+La aplicación debe documentar evidencia real del taller.
+
+No debe limitarse a tomar fotos: debe mantener relación entre:
+vehículo → inspección → evidencia → hallazgo → informe.
+
+## Filosofía de desarrollo
+
+Pequeños cambios.
+Prueba después de cada cambio.
+Explicación antes del código.
+No ocultar errores.
+No inventar persistencia.
+No saltar a funciones avanzadas antes de estabilizar el flujo base.
+
+
+===== 09_MANUAL_PARA_EL_USUARIO_Y_NUEVA_IA.md =====
+# MANUAL DE CONTINUIDAD
+
+## Si entrego este paquete a otra IA
+
+Primero debe leer:
+1. `00_LEEME_PRIMERO.md`
+2. `02_ESTADO_TECNICO_ACTUAL.md`
+3. `03_ARQUITECTURA_Y_MODELO_DATOS.md`
+4. `05_PROMPT_MAESTRO_PARA_OTRA_IA.md`
+
+Después debe pedir/revisar el código real del proyecto.
+
+## Primera sesión recomendada
+
+Mensaje:
+
+“Lee todo el paquete de migración de Autoorigen. No hagas cambios todavía. Primero dime qué entiendes del proyecto, qué partes están confirmadas, cuáles son hipótesis y qué archivos del proyecto necesitas para continuar.”
+
+Después entregar el proyecto Xcode.
+
+## Segunda sesión
+
+Solicitar:
+“Analiza el árbol completo y encuentra la implementación de Inspection, CameraView, CameraService, Finalizar y Mis Inspecciones. No modifiques nada. Haz un diagnóstico.”
+
+## Tercera sesión
+
+Resolver solamente persistencia y recuperación.
+
+## Cuarta sesión
+
+Resolver cámara y asociación de medios.
+
+## Quinta sesión
+
+Resolver informe.
+
+## Importante
+
+No mezclar simultáneamente:
+- cámara
+- IA
+- backend
+- OCR
+- informes
+- autenticación
+
+Primero debe quedar estable el núcleo de inspección.

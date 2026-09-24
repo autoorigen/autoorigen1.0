@@ -1,0 +1,26 @@
+{% extends "mecanico/base.html" %}
+{% block title %}Fotos y video — AutoorigenInspect{% endblock %}
+{% block content %}
+<h1 class="mecanico-titulo">Fotos y video</h1>
+<p class="mecanico-subtitulo">Cada foto o video se sube apenas lo tomas.</p>
+
+<div class="mecanico-captura-grupo">
+  <label class="btn btn--ghost btn--full" for="inputPlaca">📷 Foto de la placa</label>
+  <input id="inputPlaca" type="file" accept="image/*" capture="environment">
+
+  <label class="btn btn--cta btn--full" for="inputFoto">📷 Tomar foto</label>
+  <input id="inputFoto" type="file" accept="image/*" capture="environment">
+
+  <label class="btn btn--cta btn--full" for="inputVideo">🎥 Grabar video</label>
+  <input id="inputVideo" type="file" accept="video/*" capture="environment">
+</div>
+
+<div class="mecanico-lista" id="listaCapturas"></div>
+
+<button class="btn btn--ghost btn--full" id="btnContinuar" type="button" style="margin-top:20px;">
+  Continuar a observaciones
+</button>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/mecanico/captura.js') }}" data-orden-id="{{ orden_id }}"></script>
+{% endblock %}

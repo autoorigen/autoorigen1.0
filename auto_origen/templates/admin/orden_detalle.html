@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ orden.titulo }} — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">{{ orden.titulo }}</h2>
+      <p class="section-lede">
+        Vehículo: <a href="{{ url_for('admin.vehiculo_detalle', vehiculo_id=vehiculo.id) }}">{{ orden.vehiculo_placa }}</a>
+        {{ orden.marca or "" }} {{ orden.modelo or "" }}
+        · Etapa actual: <span class="badge">{{ orden.estado_actual }}</span>
+      </p>
+    </div>
+
+    <ul class="tag-log" data-reveal="" style="margin-bottom:32px;">
+      <li><span class="tag-log__k">Cliente</span><span class="tag-log__v">{{ orden.cliente_nombre }} · {{ orden.cliente_telefono }}</span></li>
+      {% if orden.combustible %}<li><span class="tag-log__k">Combustible</span><span class="tag-log__v">{{ orden.combustible.capitalize() }}</span></li>{% endif %}
+      {% if orden.kilometraje %}<li><span class="tag-log__k">Kilometraje</span><span class="tag-log__v">{{ orden.kilometraje }}</span></li>{% endif %}
+      {% if orden.kilometraje_aceite %}<li><span class="tag-log__k">Kilometraje del aceite</span><span class="tag-log__v">{{ orden.kilometraje_aceite }}</span></li>{% endif %}
+      {% if orden.tecnico_nombre %}<li><span class="tag-log__k">Inspeccionado por</span><span class="tag-log__v">{{ orden.tecnico_nombre }} (app Android)</span></li>{% endif %}
+    </ul>
+
+    <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.cambiar_estado_orden', orden_id=orden.id) }}" data-reveal="">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label>Cambiar etapa (se publica en vivo al cliente)</label>
+        <select name="estado">
+          {% for etapa in etapas %}
+          <option value="{{ etapa }}" {{ "selected" if etapa == orden.estado_actual else "" }}>{{ etapa.capitalize() }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>Nota para el cliente (opcional)</label><input name="nota" type="text"></div>
+      <button class="btn btn--cta btn--full" type="submit">Actualizar etapa</button>
+    </form>
+
+    <div class="section-head" style="margin-top:40px;">
+      <h2>Agregar a la línea de tiempo</h2>
+    </div>
+    <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.agregar_evento', orden_id=orden.id) }}" enctype="multipart/form-data" data-reveal="">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="field">
+        <label>Tipo de evento</label>
+        <select name="tipo">
+          <option value="nota">Nota</option>
+          <option value="hallazgo">Hallazgo</option>
+          <option value="informe">Informe</option>
+        </select>
+      </div>
+      <div class="field"><label>Título</label><input name="titulo" type="text" required></div>
+      <div class="field"><label>Descripción</label><textarea name="descripcion" rows="3"></textarea></div>
+      <div class="field">
+        <label>Foto o video (opcional — si adjuntas un archivo, el tipo de evento pasa a foto/video)</label>
+        <input name="archivo" type="file" accept="image/*,video/*">
+      </div>
+      <button class="btn btn--cta btn--full" type="submit">Agregar evento</button>
+    </form>
+
+    <div class="section-head" style="margin-top:40px;">
+      <h2>Línea de tiempo</h2>
+    </div>
+    {% set etiquetas_tipo = {
+      "nota": "Nota", "cambio_estado": "Cambio de etapa", "hallazgo": "Hallazgo",
+      "foto": "Foto", "video": "Video", "informe": "Informe",
+      "observacion_mecanico": "Observación del mecánico", "comentario_cliente": "Comentario del cliente",
+    } %}
+    <ul class="timeline" data-reveal="">
+      {% for evento in eventos %}
+      <li>
+        <span class="timeline__tag">{{ etiquetas_tipo.get(evento.tipo, evento.tipo) }} · {{ evento.creado_por }} · {{ evento.creado_en[:16].replace("T", " ") }}</span>
+        <p><strong>{{ evento.titulo }}</strong>{% if evento.descripcion %} — {{ evento.descripcion }}{% endif %}</p>
+        {% if evento.medio_path %}
+        <p class="timeline__medio">
+          <a href="{{ url_for('admin.ver_medio', ruta=evento.medio_path) }}" target="_blank" rel="noopener">Ver {{ "video" if evento.tipo == "video" else "foto" }}</a>
+        </p>
+        {% endif %}
+      </li>
+      {% else %}
+      <li><p>Todavía no hay eventos en esta orden.</p></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock %}

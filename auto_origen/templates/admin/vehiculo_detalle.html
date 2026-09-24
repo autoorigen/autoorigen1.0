@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ vehiculo.placa }} — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">{{ vehiculo.placa }} — {{ vehiculo.marca or "" }} {{ vehiculo.modelo or "" }}</h2>
+      <p class="section-lede">
+        Cliente: {{ cliente.nombre }} ({{ cliente.telefono }}) ·
+        <a href="{{ url_for('admin.vehiculos') }}">← Volver a vehículos</a>
+      </p>
+    </div>
+
+    <div style="border:1px solid var(--line); border-radius: var(--radius); padding:18px 20px; margin-bottom:28px;" data-reveal="">
+      <p style="margin-bottom:10px;">
+        <strong>Código de acceso a "Historia mecánica del vehículo":</strong>
+        <span class="badge" style="font-size:0.9rem; letter-spacing:0.08em;">{{ vehiculo.codigo_acceso }}</span>
+      </p>
+      <p style="color:var(--steel); font-size:0.85rem; margin-bottom:12px;">
+        Entrégaselo al cliente (en persona, recibo o WhatsApp) — con la placa y este código puede ver el
+        proceso de su carro en <code>/historial</code>.
+      </p>
+      <form method="post" action="{{ url_for('admin.regenerar_codigo_vehiculo', vehiculo_id=vehiculo.id) }}"
+            onsubmit="return confirm('El código actual dejará de funcionar. ¿Regenerar?');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn--ghost btn--small" type="submit">Regenerar código</button>
+      </form>
+    </div>
+
+    <details class="admin-form-toggle" data-reveal="">
+      <summary class="btn btn--cta btn--small">Nueva orden de trabajo</summary>
+      <form class="contact-form form--narrow" method="post" action="{{ url_for('admin.crear_orden', vehiculo_id=vehiculo.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="field"><label>Título</label><input name="titulo" type="text" placeholder="Ej. Revisión de frenos" required></div>
+        <button class="btn btn--cta btn--full" type="submit">Crear orden</button>
+      </form>
+    </details>
+
+    <div class="section-head" style="margin-top:40px;">
+      <h2>Órdenes / hoja de vida</h2>
+    </div>
+    <div class="table-scroll" data-reveal="">
+      <table class="admin-table">
+        <thead><tr><th>Título</th><th>Etapa</th><th>Creada</th><th></th></tr></thead>
+        <tbody>
+          {% for orden in ordenes %}
+          <tr>
+            <td>{{ orden.titulo }}</td>
+            <td><span class="badge">{{ orden.estado_actual }}</span></td>
+            <td>{{ orden.creado_en[:10] }}</td>
+            <td><a class="btn btn--ghost btn--small" href="{{ url_for('admin.orden_detalle', orden_id=orden.id) }}">Abrir</a></td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4">Este vehículo todavía no tiene órdenes.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if medios %}
+    <div class="section-head" style="margin-top:40px;">
+      <h2>Galería</h2>
+    </div>
+    <div class="galeria" data-reveal="">
+      {% for medio in medios %}
+      <a class="galeria__item" href="{{ url_for('admin.ver_medio', ruta=medio.archivo_path) }}" target="_blank" rel="noopener">
+        {{ "🎥 Video" if medio.tipo == "video" else "📷 Foto" }} · {{ medio.creado_en[:10] }}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

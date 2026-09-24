@@ -1,0 +1,59 @@
+/* =========================================================
+   AUTOORIGEN — mecanico.css
+   Pantallas de AutoorigenInspect en la web (misma marca, sin el menú de
+   la web de clientes: es una herramienta de trabajo, no un sitio).
+   ========================================================= */
+body{ padding-top: env(safe-area-inset-top); }
+
+.mecanico-shell{ min-height: 100vh; display: flex; flex-direction: column; }
+
+.mecanico-topbar{
+  display:flex; align-items:center; gap:10px;
+  padding: 14px 18px; border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+.mecanico-topbar__titulo{
+  font-family: var(--font-display); font-weight:600; font-size: 1rem; letter-spacing: 0.02em;
+}
+.mecanico-topbar__tecnico{
+  margin-left: auto; font-family: var(--font-mono); font-size: 0.78rem; color: var(--steel);
+}
+.mecanico-topbar__salir{
+  background:none; border: 1px solid var(--line); color: var(--paper-dim);
+  border-radius: var(--radius); padding: 6px 12px; font-family: var(--font-mono); font-size: 0.72rem;
+}
+.mecanico-topbar__salir:hover{ border-color: var(--ignition); color: var(--ignition-2); }
+
+.mecanico-main{
+  flex:1; width:100%; max-width: 520px; margin: 0 auto;
+  padding: 20px 18px calc(32px + env(safe-area-inset-bottom));
+}
+
+.mecanico-titulo{ font-family: var(--font-display); font-size: 1.3rem; margin-bottom: 4px; }
+.mecanico-subtitulo{ color: var(--paper-dim); font-size: 0.92rem; margin-bottom: 24px; }
+
+.mecanico-acciones{ display:flex; flex-direction:column; gap: 14px; margin-top: 12px; }
+
+.mecanico-lista{ display:flex; flex-direction:column; gap:10px; margin-top: 16px; }
+.mecanico-item{
+  display:block; border:1px solid var(--line); border-radius: var(--radius);
+  padding: 14px 16px; background: var(--panel-2);
+}
+.mecanico-item__titulo{ font-weight:600; margin-bottom:4px; }
+.mecanico-item__meta{ font-family: var(--font-mono); font-size:0.78rem; color: var(--steel); }
+
+.mecanico-captura-grupo{ display:flex; flex-direction:column; gap:10px; margin-bottom: 18px; }
+.mecanico-captura-grupo input[type="file"]{ display:none; }
+
+.mecanico-ficha{ border:1px solid var(--line); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; }
+.mecanico-ficha p{ font-size: 0.9rem; color: var(--paper-dim); margin: 4px 0; }
+
+.mecanico-evento{
+  border:1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; margin-bottom:10px;
+}
+.mecanico-evento__foto{ width:100%; border-radius: var(--radius); margin-top:8px; display:block; }
+
+.mecanico-cargando, .mecanico-vacio{ color: var(--steel); font-family: var(--font-mono); font-size: 0.86rem; padding: 24px 0; text-align:center; }
+
+.chip-combustible{ cursor:pointer; background:none; }
+.chip-combustible.is-activo{ border-style:solid; border-color: var(--ignition); color: var(--ignition-2); }

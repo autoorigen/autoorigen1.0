@@ -1,0 +1,82 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ vehiculo.placa }} — Historia mecánica | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">TU VEHÍCULO</p>
+      <h2 data-reveal="">{{ vehiculo.placa }} — {{ vehiculo.marca or "" }} {{ vehiculo.modelo or "" }}</h2>
+      <p class="section-lede" data-reveal="">
+        Cliente: {{ cliente.nombre }}{% if vehiculo.anio %} · Año {{ vehiculo.anio }}{% endif %}{% if vehiculo.color %} · {{ vehiculo.color }}{% endif %}{% if vehiculo.combustible %} · {{ vehiculo.combustible.capitalize() }}{% endif %}
+        {% if orden_activa and (orden_activa.kilometraje or orden_activa.kilometraje_aceite) %}
+        <br>{% if orden_activa.kilometraje %}Kilometraje: {{ orden_activa.kilometraje }}{% endif %}{% if orden_activa.kilometraje_aceite %} · Kilometraje del aceite: {{ orden_activa.kilometraje_aceite }}{% endif %}
+        {% endif %}
+      </p>
+    </div>
+
+    {% if orden_activa %}
+    <div class="progreso" data-reveal="">
+      <p class="eyebrow">PROCESO ACTUAL — {{ orden_activa.titulo }}</p>
+      <ol class="progreso__pasos">
+        {% for etapa in etapas %}
+        <li class="{{ 'is-actual' if etapa == orden_activa.estado_actual else '' }} {{ 'is-hecho' if etapas.index(etapa) < etapas.index(orden_activa.estado_actual) else '' }}">
+          {{ etapa.capitalize() }}
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+
+    {% set etiquetas_tipo = {
+      "nota": "Nota", "cambio_estado": "Cambio de etapa", "hallazgo": "Hallazgo",
+      "foto": "Foto", "video": "Video", "informe": "Informe",
+      "observacion_mecanico": "Observación del mecánico", "comentario_cliente": "Comentario del cliente",
+    } %}
+    <ul class="timeline timeline--live" id="timeline" data-vehiculo-id="{{ vehiculo.id }}">
+      {% for evento in eventos %}
+      <li data-evento-id="{{ evento.id }}">
+        <span class="timeline__tag">{{ etiquetas_tipo.get(evento.tipo, evento.tipo) }} · {{ evento.creado_en[:16].replace("T", " ") }}</span>
+        <p><strong>{{ evento.titulo }}</strong>{% if evento.descripcion %} — {{ evento.descripcion }}{% endif %}</p>
+        {% if evento.medio_path %}
+        <p class="timeline__medio">
+          {% if evento.tipo == "video" %}
+          <video controls src="{{ url_for('historial.ver_medio', medio_id=evento.id) }}"></video>
+          {% else %}
+          <a href="{{ url_for('historial.ver_medio', medio_id=evento.id) }}" target="_blank" rel="noopener">Ver foto</a>
+          {% endif %}
+        </p>
+        {% endif %}
+      </li>
+      {% else %}
+      <li><p>Todavía no hay eventos registrados para esta orden.</p></li>
+      {% endfor %}
+    </ul>
+    <p class="form-note form-note--static" id="timelineEstado">Conectando a la línea de tiempo en vivo…</p>
+    {% else %}
+    <p class="section-lede" data-reveal="">Este vehículo aún no tiene una orden de trabajo activa en Autoorigen.</p>
+    {% endif %}
+
+    {% if medios %}
+    <div class="section-head" style="margin-top:56px;">
+      <p class="eyebrow">GALERÍA</p>
+      <h2>Fotos y video</h2>
+    </div>
+    <div class="galeria">
+      {% for medio in medios %}
+      <a class="galeria__item" href="{{ url_for('historial.ver_medio', medio_id=medio.id) }}" target="_blank" rel="noopener">
+        {{ "🎥 Video" if medio.tipo == "video" else "📷 Foto" }} · {{ medio.creado_en[:10] }}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{% if orden_activa %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endif %}
+{% endblock %}
