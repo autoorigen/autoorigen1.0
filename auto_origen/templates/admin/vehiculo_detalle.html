@@ -23,11 +23,16 @@
         Entrégaselo al cliente (en persona, recibo o WhatsApp) — con la placa y este código puede ver el
         proceso de su carro en <code>/historial</code>.
       </p>
-      <form method="post" action="{{ url_for('admin.regenerar_codigo_vehiculo', vehiculo_id=vehiculo.id) }}"
-            onsubmit="return confirm('El código actual dejará de funcionar. ¿Regenerar?');">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button class="btn btn--ghost btn--small" type="submit">Regenerar código</button>
-      </form>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn--cta btn--small" href="{{ link_whatsapp }}" target="_blank" rel="noopener">
+          Enviar por WhatsApp
+        </a>
+        <form method="post" action="{{ url_for('admin.regenerar_codigo_vehiculo', vehiculo_id=vehiculo.id) }}"
+              onsubmit="return confirm('El código actual dejará de funcionar. ¿Regenerar?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn--ghost btn--small" type="submit">Regenerar código</button>
+        </form>
+      </div>
     </div>
 
     <details class="admin-form-toggle" data-reveal="">

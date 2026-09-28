@@ -1,0 +1,14 @@
+{
+  "project": "Autoorigen IA Content Studio",
+  "version": "1.0-portable",
+  "purpose": "Local video transcription and content generation for Autoorigen",
+  "original_environment_reference": "~/IA",
+  "components": [
+    "FFmpeg",
+    "Python",
+    "faster-whisper",
+    "optional Ollama"
+  ],
+  "models_included": false,
+  "created_from": "reconstructed portable package based on the documented Autoorigen Linux workflow"
+}

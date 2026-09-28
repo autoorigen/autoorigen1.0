@@ -70,9 +70,12 @@ def hoja_de_vida(placa):
     )
 
 
-@historial_bp.route("/medios/<int:medio_id>")
-def ver_medio(medio_id):
-    medio = models.obtener_medio_con_vehiculo(medio_id)
-    if not medio or not _tiene_acceso(medio["vehiculo_id"]):
+@historial_bp.route("/medios/<path:ruta>")
+def ver_medio(ruta):
+    # Los archivos se guardan como "<vehiculo_id>/<archivo>" — el propio
+    # nombre de la ruta ya dice de qué vehículo es, sin necesitar una
+    # consulta aparte para saber a quién pertenece.
+    vehiculo_id_str = ruta.split("/", 1)[0]
+    if not vehiculo_id_str.isdigit() or not _tiene_acceso(int(vehiculo_id_str)):
         abort(403)
-    return send_from_directory(current_app.config["UPLOAD_DIR"], medio["archivo_path"])
+    return send_from_directory(current_app.config["UPLOAD_DIR"], ruta)

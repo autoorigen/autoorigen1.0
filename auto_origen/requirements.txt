@@ -4,3 +4,10 @@ simple-websocket
 Flask-Login
 Flask-WTF
 python-dotenv
+
+# Informes con IA (autoorigen/ia.py, autoorigen/transcripcion.py):
+# - Ollama corre aparte (no es un paquete de Python) y se llama por HTTP con `requests`,
+#   que ya viene como dependencia transitiva de Flask.
+# - faster-whisper es pesada (descarga un modelo de Whisper la primera vez que se usa) y
+#   necesita ffmpeg instalado en el sistema.
+faster-whisper

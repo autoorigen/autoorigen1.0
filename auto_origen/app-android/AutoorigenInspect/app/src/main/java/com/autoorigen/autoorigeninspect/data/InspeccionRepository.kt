@@ -60,11 +60,14 @@ class InspeccionRepository(private val sesion: SessionManager) {
     suspend fun agregarEvento(ordenId: Int, tipo: String, descripcion: String): ApiResultado<EventoResponse> =
         llamar { it.agregarEvento(ordenId, EventoRequest(tipo, descripcion)) }
 
-    suspend fun subirMedio(ordenId: Int, archivo: File, titulo: String, esVideo: Boolean): ApiResultado<MedioResponse> {
+    suspend fun subirMedio(
+        ordenId: Int, archivo: File, titulo: String, esVideo: Boolean, esVideoIngreso: Boolean = false,
+    ): ApiResultado<MedioResponse> {
         val tipoMedia = if (esVideo) "video/mp4".toMediaTypeOrNull() else "image/jpeg".toMediaTypeOrNull()
         val cuerpoArchivo = archivo.asRequestBody(tipoMedia)
         val parte = MultipartBody.Part.createFormData("archivo", archivo.name, cuerpoArchivo)
         val cuerpoTitulo = titulo.toRequestBody("text/plain".toMediaTypeOrNull())
-        return llamar { it.subirMedio(ordenId, parte, cuerpoTitulo) }
+        val cuerpoIngreso = (if (esVideoIngreso) "1" else "0").toRequestBody("text/plain".toMediaTypeOrNull())
+        return llamar { it.subirMedio(ordenId, parte, cuerpoTitulo, cuerpoIngreso) }
     }
 }

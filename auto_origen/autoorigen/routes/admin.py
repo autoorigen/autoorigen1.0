@@ -1,6 +1,7 @@
 import uuid
 from functools import wraps
 from pathlib import Path
+from urllib.parse import quote
 
 from flask import (Blueprint, abort, current_app, flash, redirect,
                     render_template, request, send_from_directory, url_for)
@@ -8,8 +9,9 @@ from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
-from .. import models
+from .. import ia, models
 from ..auth import AdminUser
+from ..extensions import socketio
 from ..sockets import emitir_nuevo_evento
 
 admin_bp = Blueprint("admin", __name__)
@@ -59,6 +61,7 @@ def dashboard():
         "admin/dashboard.html",
         citas_pendientes=citas_pendientes, ordenes_activas=ordenes_activas,
         total_clientes=len(models.listar_clientes()), total_vehiculos=len(models.listar_vehiculos()),
+        total_informes_pendientes=len(models.listar_informes_pendientes()),
     )
 
 
@@ -136,8 +139,17 @@ def vehiculo_detalle(vehiculo_id):
     cliente = models.obtener_cliente(vehiculo["cliente_id"])
     ordenes = models.listar_ordenes_por_vehiculo(vehiculo_id)
     medios = models.listar_medios_por_vehiculo(vehiculo_id)
+
+    mensaje_whatsapp = (
+        f"Hola {cliente['nombre']}, tu código de acceso para ver el estado de tu "
+        f"{vehiculo['placa']} en Autoorigen es: {vehiculo['codigo_acceso']}. "
+        f"Entra a {url_for('historial.buscar', _external=True)} y pon la placa y este código."
+    )
+    link_whatsapp = f"https://wa.me/{models.numero_whatsapp(cliente['telefono'])}?text={quote(mensaje_whatsapp)}"
+
     return render_template(
         "admin/vehiculo_detalle.html", vehiculo=vehiculo, cliente=cliente, ordenes=ordenes, medios=medios,
+        link_whatsapp=link_whatsapp,
     )
 
 
@@ -200,7 +212,14 @@ def cambiar_estado_orden(orden_id):
             request.form.get("nota") or None, creado_por="admin",
         )
         emitir_nuevo_evento(orden["vehiculo_id"], evento, models.obtener_orden(orden_id))
-        flash("Estado actualizado.", "ok")
+
+        if estado in ("reparando", "listo"):
+            app_real = current_app._get_current_object()
+            socketio.start_background_task(ia.procesar_cambio_de_etapa, app_real, orden_id, estado)
+            etiqueta = "informe preliminar" if estado == "reparando" else "informe final"
+            flash(f"Estado actualizado. Generando el {etiqueta} con IA en segundo plano…", "ok")
+        else:
+            flash("Estado actualizado.", "ok")
     return redirect(url_for("admin.orden_detalle", orden_id=orden_id))
 
 
@@ -246,6 +265,57 @@ def agregar_evento(orden_id):
 @login_required
 def ver_medio(ruta):
     return send_from_directory(current_app.config["UPLOAD_DIR"], ruta)
+
+
+# ---------- Informes (IA) ----------
+
+@admin_bp.route("/informes")
+@login_required
+@solo_superadmin
+def informes():
+    return render_template("admin/informes.html", informes=models.listar_informes_pendientes())
+
+
+@admin_bp.route("/informes/<int:informe_id>/aprobar", methods=["POST"])
+@login_required
+@solo_superadmin
+def aprobar_informe(informe_id):
+    informe = models.obtener_informe(informe_id)
+    if not informe:
+        abort(404)
+    orden = models.obtener_orden(informe["orden_id"])
+    models.aprobar_informe(informe_id, int(current_user.id))
+    evento = models.crear_evento(
+        informe["orden_id"], "informe", "Informe final de la reparación",
+        informe["contenido"], creado_por="admin",
+    )
+    emitir_nuevo_evento(orden["vehiculo_id"], evento, models.obtener_orden(informe["orden_id"]))
+    flash("Informe aprobado y publicado para el cliente.", "ok")
+    return redirect(url_for("admin.informes"))
+
+
+@admin_bp.route("/informes/<int:informe_id>/rechazar", methods=["POST"])
+@login_required
+@solo_superadmin
+def rechazar_informe(informe_id):
+    if not models.obtener_informe(informe_id):
+        abort(404)
+    comentario = (request.form.get("comentario") or "").strip()
+    models.rechazar_informe(informe_id, int(current_user.id), comentario or None)
+    flash("Informe rechazado. Se puede regenerar desde la orden cuando haya más evidencia.", "ok")
+    return redirect(url_for("admin.informes"))
+
+
+@admin_bp.route("/ordenes/<int:orden_id>/regenerar-informe-final", methods=["POST"])
+@login_required
+@solo_superadmin
+def regenerar_informe_final(orden_id):
+    if not models.obtener_orden(orden_id):
+        abort(404)
+    app_real = current_app._get_current_object()
+    socketio.start_background_task(ia.procesar_cambio_de_etapa, app_real, orden_id, "listo")
+    flash("Regenerando el informe final con IA en segundo plano…", "ok")
+    return redirect(url_for("admin.orden_detalle", orden_id=orden_id))
 
 
 # ---------- Citas ----------

@@ -21,6 +21,11 @@ data class NuevaInspeccionUiState(
     val kilometrajeAceite: String = "",
     val guardando: Boolean = false,
     val error: String? = null,
+    // Se llenan al crear el registro con éxito, para mostrar el código de
+    // acceso en un diálogo antes de pasar a la cámara.
+    val codigoAcceso: String? = null,
+    val ordenIdCreada: Int? = null,
+    val placaCreada: String? = null,
 )
 
 class NuevaInspeccionViewModel(private val repositorio: InspeccionRepository) : ViewModel() {
@@ -36,7 +41,7 @@ class NuevaInspeccionViewModel(private val repositorio: InspeccionRepository) : 
     fun onKilometrajeCambia(v: String) { _estado.value = _estado.value.copy(kilometraje = v) }
     fun onKilometrajeAceiteCambia(v: String) { _estado.value = _estado.value.copy(kilometrajeAceite = v) }
 
-    fun crearRegistro(alCrear: (ordenId: Int, placa: String) -> Unit) {
+    fun crearRegistro() {
         val actual = _estado.value
         if (actual.placa.isBlank() || actual.clienteNombre.isBlank() || actual.clienteTelefono.isBlank()) {
             _estado.value = actual.copy(error = "Placa, nombre del cliente y teléfono son obligatorios.")
@@ -61,8 +66,12 @@ class NuevaInspeccionViewModel(private val repositorio: InspeccionRepository) : 
                 is ApiResultado.Exito -> {
                     val respuesta = resultado.datos
                     if (respuesta.ok && respuesta.ordenId != null) {
-                        _estado.value = _estado.value.copy(guardando = false)
-                        alCrear(respuesta.ordenId, actual.placa.trim())
+                        _estado.value = _estado.value.copy(
+                            guardando = false,
+                            codigoAcceso = respuesta.codigoAcceso,
+                            ordenIdCreada = respuesta.ordenId,
+                            placaCreada = actual.placa.trim(),
+                        )
                     } else {
                         _estado.value = _estado.value.copy(
                             guardando = false,
@@ -75,5 +84,15 @@ class NuevaInspeccionViewModel(private val repositorio: InspeccionRepository) : 
                 }
             }
         }
+    }
+
+    /** Se llama cuando el mecánico cierra el diálogo del código de acceso;
+     * ahí recién se navega a la pantalla de cámara. */
+    fun confirmarCodigoYContinuar(alContinuar: (ordenId: Int, placa: String) -> Unit) {
+        val actual = _estado.value
+        val ordenId = actual.ordenIdCreada ?: return
+        val placa = actual.placaCreada ?: return
+        _estado.value = actual.copy(codigoAcceso = null, ordenIdCreada = null, placaCreada = null)
+        alContinuar(ordenId, placa)
     }
 }

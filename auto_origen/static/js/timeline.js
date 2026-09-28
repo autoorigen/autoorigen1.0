@@ -15,8 +15,10 @@
     var etiquetasTipo = {
       nota: 'Nota', cambio_estado: 'Cambio de etapa', hallazgo: 'Hallazgo',
       foto: 'Foto', video: 'Video', informe: 'Informe',
-      observacion_mecanico: 'Observación del mecánico', comentario_cliente: 'Comentario del cliente'
+      observacion_mecanico: 'Observación del mecánico', comentario_cliente: 'Comentario del cliente',
+      video_ingreso: 'Video de ingreso'
     };
+    var tiposVideo = ['video', 'video_ingreso'];
 
     var socket = io({ transports: ['websocket', 'polling'] });
 
@@ -53,7 +55,21 @@
       if (evento.medio_path) {
         var mediaP = document.createElement('p');
         mediaP.className = 'timeline__medio';
-        mediaP.textContent = evento.tipo === 'video' ? '🎥 Video agregado' : '📷 Foto agregada';
+        var esVideo = tiposVideo.indexOf(evento.tipo) !== -1;
+        var url = '/historial/medios/' + evento.medio_path;
+        if (esVideo) {
+          var video = document.createElement('video');
+          video.controls = true;
+          video.src = url;
+          mediaP.appendChild(video);
+        } else {
+          var enlace = document.createElement('a');
+          enlace.href = url;
+          enlace.target = '_blank';
+          enlace.rel = 'noopener';
+          enlace.textContent = 'Ver foto';
+          mediaP.appendChild(enlace);
+        }
         item.appendChild(mediaP);
       }
 

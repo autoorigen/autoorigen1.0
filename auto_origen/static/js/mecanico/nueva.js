@@ -40,6 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
     AOMecanico.apiJson('/api/inspecciones', { method: 'POST', body: JSON.stringify(datos) })
       .then(function (resultado) {
         if (resultado.ok) {
+          window.alert(
+            'Código de acceso para ' + datos.placa + ': ' + resultado.datos.codigo_acceso +
+            '\n\nEntrégaselo al cliente ahora (de palabra, por WhatsApp o en el recibo) — ' +
+            'lo va a necesitar junto con la placa para ver el estado de su carro en la web.'
+          );
           window.location.href = '/mecanico/captura/' + resultado.datos.orden_id;
         } else {
           nota.textContent = (resultado.datos && resultado.datos.error) || 'No se pudo crear el registro.';

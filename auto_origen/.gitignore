@@ -15,6 +15,7 @@ data/uploads/*
 
 # Variables secretas
 .env
+docs/credenciales-admin.*
 
 # App Android (AutoorigenInspect) — artefactos de build, no código
 app-android/**/build/

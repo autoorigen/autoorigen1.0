@@ -8,7 +8,7 @@ EVENTOS_TIMELINE_COLUMNAS = """
     orden_id INTEGER NOT NULL REFERENCES ordenes(id) ON DELETE CASCADE,
     tipo TEXT NOT NULL CHECK (tipo IN (
         'nota', 'cambio_estado', 'hallazgo', 'foto', 'video', 'informe',
-        'observacion_mecanico', 'comentario_cliente'
+        'observacion_mecanico', 'comentario_cliente', 'video_ingreso'
     )),
     titulo TEXT NOT NULL,
     descripcion TEXT,
@@ -118,6 +118,18 @@ CREATE TABLE IF NOT EXISTS api_tokens (
     activo INTEGER NOT NULL DEFAULT 1,
     creado_en TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS informes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    orden_id INTEGER NOT NULL REFERENCES ordenes(id) ON DELETE CASCADE,
+    tipo TEXT NOT NULL CHECK (tipo IN ('preliminar', 'final')),
+    contenido TEXT NOT NULL,
+    estado TEXT NOT NULL DEFAULT 'generado' CHECK (estado IN ('generado', 'aprobado', 'rechazado')),
+    aprobado_por INTEGER REFERENCES admins(id) ON DELETE SET NULL,
+    comentario_supervisor TEXT,
+    creado_en TEXT NOT NULL,
+    revisado_en TEXT
+);
 """
 
 
@@ -186,7 +198,7 @@ def migrate_schema(db):
     definicion_actual = db.execute(
         "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'eventos_timeline'"
     ).fetchone()
-    if definicion_actual and "observacion_mecanico" not in definicion_actual["sql"]:
+    if definicion_actual and "video_ingreso" not in definicion_actual["sql"]:
         # RENAME TABLE reescribe automáticamente la FK de medios.evento_id
         # hacia el nombre temporal "eventos_timeline_viejo". Probado a mano:
         # ninguna de las dos pragmas la evita por separado, pero juntas sí

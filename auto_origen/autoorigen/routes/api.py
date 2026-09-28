@@ -306,9 +306,12 @@ def subir_medio_inspeccion(orden_id):
     except ValueError as exc:
         return jsonify(ok=False, error=str(exc)), 400
 
+    es_video_ingreso = request.form.get("es_video_ingreso") == "1" and tipo == "video"
+    tipo_evento = "video_ingreso" if es_video_ingreso else tipo
+
     titulo = (request.form.get("titulo") or ("Foto nueva" if tipo == "foto" else "Video nuevo"))
     evento = models.crear_evento(
-        orden_id, tipo, titulo, request.form.get("descripcion"), medio_path, creado_por="app_movil",
+        orden_id, tipo_evento, titulo, request.form.get("descripcion"), medio_path, creado_por="app_movil",
     )
     models.guardar_medio(orden_id, tipo, medio_path, evento_id=evento["id"])
     emitir_nuevo_evento(orden["vehiculo_id"], evento, orden)

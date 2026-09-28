@@ -22,6 +22,17 @@ def generar_codigo_acceso(longitud=8):
     return "".join(secrets.choice(ALFABETO_CODIGO_ACCESO) for _ in range(longitud))
 
 
+def numero_whatsapp(telefono):
+    """Convierte un teléfono guardado (con o sin +57, espacios, guiones...)
+    al formato que necesita wa.me: solo dígitos, con código de país. Si el
+    número ya viene completo se deja igual; si parece un celular colombiano
+    de 10 dígitos sin indicativo, se le antepone 57 (mercado del taller)."""
+    digitos = re.sub(r"\D", "", telefono or "")
+    if len(digitos) == 10 and digitos.startswith("3"):
+        return "57" + digitos
+    return digitos
+
+
 # ---------- Clientes ----------
 
 def crear_cliente(nombre, telefono, email=None):
@@ -253,6 +264,24 @@ def listar_eventos_por_orden(orden_id):
     ).fetchall()
 
 
+TIPOS_EVENTO_TEXTO = (
+    "nota", "hallazgo", "observacion_mecanico", "comentario_cliente", "cambio_estado",
+)
+
+
+def listar_eventos_texto_por_orden(orden_id):
+    """Eventos con contenido de texto (sin fotos/video) — es el contexto que se le
+    pasa a la IA para redactar los informes; nunca incluye nada que no haya escrito
+    alguien del taller o el cliente."""
+    marcadores = ",".join("?" * len(TIPOS_EVENTO_TEXTO))
+    return get_db().execute(
+        f"""SELECT * FROM eventos_timeline
+            WHERE orden_id = ? AND tipo IN ({marcadores})
+            ORDER BY creado_en ASC""",
+        (orden_id, *TIPOS_EVENTO_TEXTO),
+    ).fetchall()
+
+
 # ---------- Medios (fotos / video) ----------
 
 def guardar_medio(orden_id, tipo, archivo_path, evento_id=None):
@@ -276,17 +305,15 @@ def listar_medios_por_vehiculo(vehiculo_id):
     ).fetchall()
 
 
-def obtener_medio(medio_id):
-    return get_db().execute("SELECT * FROM medios WHERE id = ?", (medio_id,)).fetchone()
-
-
-def obtener_medio_con_vehiculo(medio_id):
+def listar_medios_por_orden(orden_id, tipo=None):
+    if tipo:
+        return get_db().execute(
+            "SELECT * FROM medios WHERE orden_id = ? AND tipo = ? ORDER BY creado_en ASC",
+            (orden_id, tipo),
+        ).fetchall()
     return get_db().execute(
-        """SELECT medios.*, ordenes.vehiculo_id AS vehiculo_id
-           FROM medios JOIN ordenes ON ordenes.id = medios.orden_id
-           WHERE medios.id = ?""",
-        (medio_id,),
-    ).fetchone()
+        "SELECT * FROM medios WHERE orden_id = ? ORDER BY creado_en ASC", (orden_id,)
+    ).fetchall()
 
 
 # ---------- Admins ----------
@@ -450,6 +477,65 @@ def listar_api_tokens():
 def revocar_api_token(token_id):
     db = get_db()
     db.execute("UPDATE api_tokens SET activo = 0 WHERE id = ?", (token_id,))
+    db.commit()
+
+
+# ---------- Informes (IA: preliminar y final) ----------
+
+def crear_informe(orden_id, tipo, contenido):
+    db = get_db()
+    cur = db.execute(
+        """INSERT INTO informes (orden_id, tipo, contenido, estado, creado_en)
+           VALUES (?, ?, ?, 'generado', ?)""",
+        (orden_id, tipo, contenido, _ahora()),
+    )
+    db.commit()
+    return obtener_informe(cur.lastrowid)
+
+
+def obtener_informe(informe_id):
+    return get_db().execute("SELECT * FROM informes WHERE id = ?", (informe_id,)).fetchone()
+
+
+def ultimo_informe_por_orden(orden_id, tipo):
+    return get_db().execute(
+        """SELECT * FROM informes WHERE orden_id = ? AND tipo = ?
+           ORDER BY creado_en DESC LIMIT 1""",
+        (orden_id, tipo),
+    ).fetchone()
+
+
+def listar_informes_pendientes():
+    """Informes finales esperando revisión del jefe de taller (superadmin)."""
+    return get_db().execute(
+        """SELECT informes.*, ordenes.titulo AS orden_titulo, vehiculos.placa AS vehiculo_placa,
+                  vehiculos.id AS vehiculo_id, clientes.nombre AS cliente_nombre
+           FROM informes
+           JOIN ordenes ON ordenes.id = informes.orden_id
+           JOIN vehiculos ON vehiculos.id = ordenes.vehiculo_id
+           JOIN clientes ON clientes.id = vehiculos.cliente_id
+           WHERE informes.tipo = 'final' AND informes.estado = 'generado'
+           ORDER BY informes.creado_en ASC"""
+    ).fetchall()
+
+
+def aprobar_informe(informe_id, admin_id):
+    db = get_db()
+    db.execute(
+        """UPDATE informes SET estado = 'aprobado', aprobado_por = ?, revisado_en = ?
+           WHERE id = ?""",
+        (admin_id, _ahora(), informe_id),
+    )
+    db.commit()
+
+
+def rechazar_informe(informe_id, admin_id, comentario):
+    db = get_db()
+    db.execute(
+        """UPDATE informes SET estado = 'rechazado', aprobado_por = ?, comentario_supervisor = ?, revisado_en = ?
+           WHERE id = ?""",
+        (admin_id, comentario, _ahora(), informe_id),
+    )
     db.commit()
 
 

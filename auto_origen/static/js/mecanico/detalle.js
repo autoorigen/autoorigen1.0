@@ -2,8 +2,9 @@ var ORDEN_ID_DETALLE = document.currentScript.getAttribute('data-orden-id');
 
 var ETIQUETAS_TIPO_DETALLE = {
   nota: 'Nota', cambio_estado: 'Cambio de etapa', hallazgo: 'Hallazgo',
-  foto: 'Foto', video: 'Video',
+  foto: 'Foto', video: 'Video', informe: 'Informe',
   observacion_mecanico: 'Observación del mecánico', comentario_cliente: 'Comentario del cliente',
+  video_ingreso: 'Video de ingreso',
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -61,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (blob) { img.src = URL.createObjectURL(blob); })
             .catch(function () { /* si la foto no carga, el resto del detalle sigue visible */ });
           div.appendChild(img);
-        } else if (evento.medio_path && evento.tipo === 'video') {
+        } else if (evento.medio_path && (evento.tipo === 'video' || evento.tipo === 'video_ingreso')) {
           var p = document.createElement('p');
           p.className = 'mecanico-item__meta';
           p.textContent = '🎥 Video disponible en el servidor';

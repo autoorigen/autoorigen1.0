@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}Informes pendientes — Panel admin | AUTOORIGEN{% endblock %}
+
+{% block content %}
+<section class="section page-head">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal="">ADMINISTRACIÓN</p>
+      <h2 data-reveal="">Informes finales pendientes de revisión</h2>
+      <p class="section-lede">
+        Se generan solos con IA al pasar una orden a "Listo". Revisa cada uno antes de que
+        salga publicado al cliente.
+        <a href="{{ url_for('admin.dashboard') }}">← Volver al panel</a>
+      </p>
+    </div>
+
+    {% if not informes %}
+    <p class="section-lede" data-reveal="">No hay informes finales esperando revisión.</p>
+    {% endif %}
+
+    {% for informe in informes %}
+    <div style="border:1px solid var(--line); border-radius: var(--radius); padding:24px; margin-bottom:24px;" data-reveal="">
+      <p style="margin-bottom:6px;">
+        <strong>{{ informe.vehiculo_placa }}</strong> — {{ informe.orden_titulo }} ·
+        Cliente: {{ informe.cliente_nombre }}
+      </p>
+      <p style="color:var(--steel); font-size:0.8rem; margin-bottom:16px;">
+        Generado {{ informe.creado_en[:16].replace("T", " ") }} ·
+        <a href="{{ url_for('admin.vehiculo_detalle', vehiculo_id=informe.vehiculo_id) }}">Ver vehículo</a>
+      </p>
+      <p style="white-space:pre-wrap; background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius); padding:16px; font-size:0.92rem; color:var(--paper-dim); margin-bottom:18px;">{{ informe.contenido }}</p>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <form method="post" action="{{ url_for('admin.aprobar_informe', informe_id=informe.id) }}"
+              onsubmit="return confirm('¿Aprobar y publicar este informe al cliente?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn--cta btn--small" type="submit">Aprobar y publicar</button>
+        </form>
+        <details style="display:inline-block;">
+          <summary class="btn btn--ghost btn--small" style="display:inline-block; cursor:pointer;">Rechazar</summary>
+          <form method="post" action="{{ url_for('admin.rechazar_informe', informe_id=informe.id) }}" style="margin-top:10px; max-width:420px;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="field">
+              <label>Por qué se rechaza (opcional)</label>
+              <textarea name="comentario" rows="2"></textarea>
+            </div>
+            <button class="btn btn--ghost btn--small" type="submit">Confirmar rechazo</button>
+          </form>
+        </details>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

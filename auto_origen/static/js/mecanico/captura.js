@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var ordenId = ORDEN_ID_CAPTURA;
   var lista = document.getElementById('listaCapturas');
 
-  function subir(input, titulo) {
+  function subir(input, titulo, esVideoIngreso) {
     var archivo = input.files[0];
     if (!archivo) return;
 
@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var formData = new FormData();
     formData.append('archivo', archivo);
     formData.append('titulo', titulo);
+    if (esVideoIngreso) formData.append('es_video_ingreso', '1');
 
     AOMecanico.api('/api/inspecciones/' + ordenId + '/medios', { method: 'POST', body: formData })
       .then(function (r) { return r.json(); })
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.getElementById('inputPlaca').addEventListener('change', function () { subir(this, 'Foto de la placa'); });
+  document.getElementById('inputIngreso').addEventListener('change', function () { subir(this, 'Video de ingreso del vehículo', true); });
   document.getElementById('inputFoto').addEventListener('change', function () { subir(this, 'Foto de la inspección'); });
   document.getElementById('inputVideo').addEventListener('change', function () { subir(this, 'Video de la inspección'); });
 

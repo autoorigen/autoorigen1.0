@@ -5,8 +5,10 @@
 # Cuando pida "Password", pega el TOKEN (ghp_...), no tu contraseña.
 # =========================================================
 set -e
-cd "$(dirname "$0")"
-REPO_URL="${REPO_URL:-https://github.com/autoorigen/autoorigen.git}"
+# El repositorio git real vive un nivel arriba de esta carpeta
+# (C:/Users/camal/Downloads/auto_origen/), no aquí adentro — por eso el "/..".
+cd "$(dirname "$0")/.."
+REPO_URL="${REPO_URL:-https://github.com/autoorigen/autoorigen1.0.git}"
 
 # 1. Identidad para los commits (solo se pregunta la primera vez)
 if [ -z "$(git config --global user.name)" ]; then
@@ -34,7 +36,7 @@ git add .
 if git diff --cached --quiet; then
   echo "▶ No hay cambios nuevos para guardar."
 else
-  git commit -q -m "Autoorigen V1.1: preloader, animaciones, docs y estructura del repo"
+  git commit -q -m "Actualización $(date '+%Y-%m-%d %H:%M')"
   echo "▶ Cambios guardados en un commit."
 fi
 

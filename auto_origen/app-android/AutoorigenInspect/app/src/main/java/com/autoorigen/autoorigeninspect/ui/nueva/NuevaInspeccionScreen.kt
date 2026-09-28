@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -85,10 +87,28 @@ fun NuevaInspeccionScreen(alCrear: (ordenId: Int, placa: String) -> Unit, alCanc
 
             BotonPrincipal(
                 texto = "Continuar a fotos y video",
-                onClick = { viewModel.crearRegistro(alCrear) },
+                onClick = { viewModel.crearRegistro() },
                 cargando = estado.guardando,
             )
             BotonSecundario(texto = "Cancelar", onClick = alCancelar, habilitado = !estado.guardando)
         }
+    }
+
+    if (estado.codigoAcceso != null) {
+        AlertDialog(
+            onDismissRequest = { /* se cierra solo con el botón: hay que leer el código antes de seguir */ },
+            title = { Text("Código de acceso — ${estado.placaCreada}") },
+            text = {
+                Text(
+                    "${estado.codigoAcceso}\n\nEntrégaselo al cliente ahora (de palabra, por WhatsApp o en " +
+                        "el recibo). Lo va a necesitar junto con la placa para ver el estado de su carro en la web.",
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.confirmarCodigoYContinuar(alCrear) }) {
+                    Text("Ya se lo di, continuar")
+                }
+            },
+        )
     }
 }

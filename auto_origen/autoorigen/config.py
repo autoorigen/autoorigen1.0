@@ -18,3 +18,12 @@ class Config:
     # acceso propio del vehículo (autoorigen/models.py: generar_codigo_acceso),
     # no con SMS — no hay credenciales de terceros que configurar aquí.
     HISTORIAL_SESION_MINUTOS = 30
+
+    # Informes con IA (autoorigen/ia.py): Ollama corre local, sin API de pago.
+    # Mismos valores por defecto que Autoorigen_IA_Content_Studio/config/settings.example.json.
+    OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434")
+    OLLAMA_MODELO = os.environ.get("OLLAMA_MODELO", "qwen2.5:7b")
+
+    # Transcripción (autoorigen/transcripcion.py): tamaño del modelo de Whisper.
+    # "small" es un buen punto de partida en CPU sin GPU dedicada.
+    WHISPER_MODELO = os.environ.get("WHISPER_MODELO", "small")

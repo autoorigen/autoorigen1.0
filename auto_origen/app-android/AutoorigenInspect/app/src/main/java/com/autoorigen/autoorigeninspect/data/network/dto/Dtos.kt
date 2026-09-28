@@ -38,6 +38,7 @@ data class CrearInspeccionResponse(
     val ok: Boolean,
     @SerializedName("orden_id") val ordenId: Int? = null,
     @SerializedName("vehiculo_id") val vehiculoId: Int? = null,
+    @SerializedName("codigo_acceso") val codigoAcceso: String? = null,
     val error: String? = null,
 )
 

@@ -43,13 +43,14 @@
 
     <div class="table-scroll" data-reveal="">
       <table class="admin-table">
-        <thead><tr><th>Placa</th><th>Vehículo</th><th>Cliente</th><th></th></tr></thead>
+        <thead><tr><th>Placa</th><th>Vehículo</th><th>Cliente</th><th>Código de acceso</th><th></th></tr></thead>
         <tbody>
           {% for vehiculo in vehiculos %}
           <tr>
             <td>{{ vehiculo.placa }}</td>
             <td>{{ vehiculo.marca or "" }} {{ vehiculo.modelo or "" }} {{ vehiculo.anio or "" }}</td>
             <td>{{ vehiculo.cliente_nombre }}</td>
+            <td><span class="badge">{{ vehiculo.codigo_acceso }}</span></td>
             <td>
               <a class="btn btn--ghost btn--small" href="{{ url_for('admin.vehiculo_detalle', vehiculo_id=vehiculo.id) }}">Ver hoja de vida</a>
               <form method="post" action="{{ url_for('admin.eliminar_vehiculo', vehiculo_id=vehiculo.id) }}" onsubmit="return confirm('¿Eliminar este vehículo y su historial?');" style="display:inline;">
@@ -59,7 +60,7 @@
             </td>
           </tr>
           {% else %}
-          <tr><td colspan="4">Todavía no hay vehículos registrados.</td></tr>
+          <tr><td colspan="5">Todavía no hay vehículos registrados.</td></tr>
           {% endfor %}
         </tbody>
       </table>

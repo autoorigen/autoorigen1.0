@@ -28,12 +28,12 @@ class CapturaViewModel(
     private val _elementos = MutableStateFlow<List<ElementoCapturado>>(emptyList())
     val elementos: StateFlow<List<ElementoCapturado>> = _elementos.asStateFlow()
 
-    fun subirArchivo(archivo: File, esVideo: Boolean, titulo: String) {
+    fun subirArchivo(archivo: File, esVideo: Boolean, titulo: String, esVideoIngreso: Boolean = false) {
         val id = UUID.randomUUID().toString()
         _elementos.value = _elementos.value + ElementoCapturado(id = id, esVideo = esVideo, titulo = titulo)
 
         viewModelScope.launch {
-            when (val resultado = repositorio.subirMedio(ordenId, archivo, titulo, esVideo)) {
+            when (val resultado = repositorio.subirMedio(ordenId, archivo, titulo, esVideo, esVideoIngreso)) {
                 is ApiResultado.Exito -> {
                     val ok = resultado.datos.ok
                     actualizar(id) {

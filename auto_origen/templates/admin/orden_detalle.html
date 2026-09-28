@@ -66,7 +66,9 @@
       "nota": "Nota", "cambio_estado": "Cambio de etapa", "hallazgo": "Hallazgo",
       "foto": "Foto", "video": "Video", "informe": "Informe",
       "observacion_mecanico": "Observación del mecánico", "comentario_cliente": "Comentario del cliente",
+      "video_ingreso": "Video de ingreso",
     } %}
+    {% set tipos_video = ["video", "video_ingreso"] %}
     <ul class="timeline" data-reveal="">
       {% for evento in eventos %}
       <li>
@@ -74,7 +76,7 @@
         <p><strong>{{ evento.titulo }}</strong>{% if evento.descripcion %} — {{ evento.descripcion }}{% endif %}</p>
         {% if evento.medio_path %}
         <p class="timeline__medio">
-          <a href="{{ url_for('admin.ver_medio', ruta=evento.medio_path) }}" target="_blank" rel="noopener">Ver {{ "video" if evento.tipo == "video" else "foto" }}</a>
+          <a href="{{ url_for('admin.ver_medio', ruta=evento.medio_path) }}" target="_blank" rel="noopener">Ver {{ "video" if evento.tipo in tipos_video else "foto" }}</a>
         </p>
         {% endif %}
       </li>
@@ -82,6 +84,22 @@
       <li><p>Todavía no hay eventos en esta orden.</p></li>
       {% endfor %}
     </ul>
+
+    {% if current_user.es_superadmin and orden.estado_actual == "listo" %}
+    <div class="section-head" style="margin-top:40px;">
+      <h2>Informe final</h2>
+    </div>
+    <p class="section-lede" style="margin-bottom:16px;">
+      Se genera solo al pasar a "Listo". Si el jefe de taller lo rechazó (ver
+      <a href="{{ url_for('admin.informes') }}">Informes pendientes</a>), puedes pedir uno
+      nuevo aquí sin cambiar la etapa del vehículo.
+    </p>
+    <form method="post" action="{{ url_for('admin.regenerar_informe_final', orden_id=orden.id) }}"
+          onsubmit="return confirm('¿Volver a generar el informe final con la IA?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn btn--ghost btn--small" type="submit">Regenerar informe final</button>
+    </form>
+    {% endif %}
   </div>
 </section>
 {% endblock %}

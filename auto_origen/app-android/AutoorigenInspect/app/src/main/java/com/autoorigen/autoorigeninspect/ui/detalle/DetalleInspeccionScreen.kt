@@ -37,9 +37,11 @@ import com.autoorigen.autoorigeninspect.ui.SimpleViewModelFactory
 
 private val ETIQUETAS_TIPO = mapOf(
     "nota" to "Nota", "cambio_estado" to "Cambio de etapa", "hallazgo" to "Hallazgo",
-    "foto" to "Foto", "video" to "Video",
+    "foto" to "Foto", "video" to "Video", "informe" to "Informe",
     "observacion_mecanico" to "Observación del mecánico", "comentario_cliente" to "Comentario del cliente",
+    "video_ingreso" to "Video de ingreso",
 )
+private val TIPOS_VIDEO = setOf("video", "video_ingreso")
 
 @Composable
 fun DetalleInspeccionScreen(ordenId: Int, alVolver: () -> Unit) {
@@ -111,7 +113,7 @@ private fun EventoCard(evento: EventoDto, servidorUrl: String, token: String?) {
                 val urlBase = if (servidorUrl.endsWith("/")) servidorUrl else "$servidorUrl/"
                 val url = "${urlBase}api/inspecciones/medios/${evento.medioPath}"
 
-                if (evento.tipo == "video") {
+                if (evento.tipo in TIPOS_VIDEO) {
                     Row(modifier = Modifier.fillMaxWidth().padding(top = 6.dp)) {
                         Icon(Icons.Filled.Videocam, contentDescription = null)
                         Text(" Video disponible en el servidor", style = MaterialTheme.typography.bodyMedium)

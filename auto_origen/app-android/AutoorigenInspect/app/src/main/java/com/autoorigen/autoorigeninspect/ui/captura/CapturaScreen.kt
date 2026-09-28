@@ -129,7 +129,7 @@ fun CapturaScreen(ordenId: Int, placa: String, alContinuar: () -> Unit) {
         )
     }
 
-    fun alternarGrabacionVideo() {
+    fun alternarGrabacionVideo(esIngreso: Boolean) {
         val grabacionEnCurso = grabacionActiva
         if (grabacionEnCurso != null) {
             grabacionEnCurso.stop()
@@ -143,10 +143,11 @@ fun CapturaScreen(ordenId: Int, placa: String, alContinuar: () -> Unit) {
                 it.withAudioEnabled()
             } else it
         }
+        val titulo = if (esIngreso) "Video de ingreso del vehículo" else "Video de la inspección"
         grabacionActiva = pendiente.start(ContextCompat.getMainExecutor(context)) { evento ->
             if (evento is VideoRecordEvent.Finalize) {
                 if (!evento.hasError()) {
-                    viewModel.subirArchivo(archivo, esVideo = true, titulo = "Video de la inspección")
+                    viewModel.subirArchivo(archivo, esVideo = true, titulo = titulo, esVideoIngreso = esIngreso)
                 }
             }
         }
@@ -174,6 +175,10 @@ fun CapturaScreen(ordenId: Int, placa: String, alContinuar: () -> Unit) {
                 Icon(Icons.Filled.CameraAlt, contentDescription = null)
                 Text(" Foto de la placa")
             }
+            OutlinedButton(onClick = { alternarGrabacionVideo(esIngreso = true) }, modifier = Modifier.weight(1f)) {
+                Icon(if (grabacionActiva != null) Icons.Filled.Stop else Icons.Filled.FiberManualRecord, contentDescription = null)
+                Text(if (grabacionActiva != null) " Detener" else " Video de ingreso")
+            }
         }
         Row(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
@@ -183,7 +188,7 @@ fun CapturaScreen(ordenId: Int, placa: String, alContinuar: () -> Unit) {
                 Icon(Icons.Filled.CameraAlt, contentDescription = null)
                 Text(" Tomar foto")
             }
-            Button(onClick = { alternarGrabacionVideo() }, modifier = Modifier.weight(1f)) {
+            Button(onClick = { alternarGrabacionVideo(esIngreso = false) }, modifier = Modifier.weight(1f)) {
                 Icon(if (grabacionActiva != null) Icons.Filled.Stop else Icons.Filled.FiberManualRecord, contentDescription = null)
                 Text(if (grabacionActiva != null) " Detener video" else " Grabar video")
             }

@@ -32,7 +32,9 @@
       "nota": "Nota", "cambio_estado": "Cambio de etapa", "hallazgo": "Hallazgo",
       "foto": "Foto", "video": "Video", "informe": "Informe",
       "observacion_mecanico": "Observación del mecánico", "comentario_cliente": "Comentario del cliente",
+      "video_ingreso": "Video de ingreso",
     } %}
+    {% set tipos_video = ["video", "video_ingreso"] %}
     <ul class="timeline timeline--live" id="timeline" data-vehiculo-id="{{ vehiculo.id }}">
       {% for evento in eventos %}
       <li data-evento-id="{{ evento.id }}">
@@ -40,10 +42,10 @@
         <p><strong>{{ evento.titulo }}</strong>{% if evento.descripcion %} — {{ evento.descripcion }}{% endif %}</p>
         {% if evento.medio_path %}
         <p class="timeline__medio">
-          {% if evento.tipo == "video" %}
-          <video controls src="{{ url_for('historial.ver_medio', medio_id=evento.id) }}"></video>
+          {% if evento.tipo in tipos_video %}
+          <video controls src="{{ url_for('historial.ver_medio', ruta=evento.medio_path) }}"></video>
           {% else %}
-          <a href="{{ url_for('historial.ver_medio', medio_id=evento.id) }}" target="_blank" rel="noopener">Ver foto</a>
+          <a href="{{ url_for('historial.ver_medio', ruta=evento.medio_path) }}" target="_blank" rel="noopener">Ver foto</a>
           {% endif %}
         </p>
         {% endif %}
@@ -64,7 +66,7 @@
     </div>
     <div class="galeria">
       {% for medio in medios %}
-      <a class="galeria__item" href="{{ url_for('historial.ver_medio', medio_id=medio.id) }}" target="_blank" rel="noopener">
+      <a class="galeria__item" href="{{ url_for('historial.ver_medio', ruta=medio.archivo_path) }}" target="_blank" rel="noopener">
         {{ "🎥 Video" if medio.tipo == "video" else "📷 Foto" }} · {{ medio.creado_en[:10] }}
       </a>
       {% endfor %}

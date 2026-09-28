@@ -43,5 +43,6 @@ interface ApiService {
         @Path("ordenId") ordenId: Int,
         @Part archivo: MultipartBody.Part,
         @Part("titulo") titulo: RequestBody,
+        @Part("es_video_ingreso") esVideoIngreso: RequestBody,
     ): MedioResponse
 }
