@@ -11,6 +11,7 @@ class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "dev-cambia-esta-clave")
 
     DB_PATH = Path(os.environ.get("DB_PATH", BASE_DIR / "data" / "autoorigen.db"))
+    DATABASE_URL = os.environ.get("DATABASE_URL")
     UPLOAD_DIR = Path(os.environ.get("UPLOAD_DIR", BASE_DIR / "data" / "uploads"))
     MAX_CONTENT_LENGTH = 25 * 1024 * 1024  # 25 MB por archivo subido
 

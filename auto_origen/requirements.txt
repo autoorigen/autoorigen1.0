@@ -11,3 +11,5 @@ python-dotenv
 # - faster-whisper es pesada (descarga un modelo de Whisper la primera vez que se usa) y
 #   necesita ffmpeg instalado en el sistema.
 faster-whisper
+psycopg[binary]
+requests
